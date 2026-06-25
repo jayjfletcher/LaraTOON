@@ -262,7 +262,7 @@ it('throws on invalid escape sequence', function () {
 })->throws(\Jayi\Toon\Exceptions\ToonDecodeException::class);
 
 it('throws on indentation errors in strict mode', function () {
-    $decoder = new ToonDecoder(new DecoderOptions(indent: 2));
+    $decoder = new ToonDecoder(new DecoderOptions(indentSize: 2));
 
     $decoder->decode("user:\n   name: Ada");
 })->throws(ToonStrictModeException::class);

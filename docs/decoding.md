@@ -17,7 +17,7 @@ $data = Toon::decode($toon);
 // Explicit configuration
 $data = Toon::decode($toon, new DecoderOptions(
     strict: true,
-    indent: 2,
+    indentSize: 2,
     expandPaths: PathExpansion::Off,
 ));
 ```
@@ -27,12 +27,12 @@ $data = Toon::decode($toon, new DecoderOptions(
 | Option | Default | Description |
 |--------|---------|-------------|
 | `strict` | `true` | Enforce count mismatches, indentation, escapes, blank lines in arrays |
-| `indent` | `null` | Spaces per level. `null` auto-detects from the first indented line |
+| `indentSize` | `null` | Spaces per level. `null` auto-detects from the first indented line |
 | `expandPaths` | `Auto` | `Off`: dotted keys are literal. `Safe`: always expand. `Auto`: expand when dotted keys detected |
 
 ## Auto-Detection
 
-When `indent` is `null` (the default), the decoder examines the first indented line in the input to determine the indent size. This works reliably for any consistent indentation (1, 2, 4 spaces, etc.).
+When `indentSize` is `null` (the default), the decoder examines the first indented line in the input to determine the indent size. This works reliably for any consistent indentation (1, 2, 4 spaces, etc.).
 
 When `expandPaths` is set to `Auto`, the decoder checks whether any top-level keys contain dots. If they do, it expands them into nested structures:
 

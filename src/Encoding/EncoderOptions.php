@@ -13,13 +13,13 @@ use Jayi\Toon\Enums\KeyFolding;
 readonly class EncoderOptions
 {
     /**
-     * @param  int  $indent  Spaces per indentation level (default 2).
+     * @param  int  $indentSize  Spaces per indentation level (default 2).
      * @param  Delimiter  $delimiter  Delimiter for array values and tabular rows.
      * @param  KeyFolding  $keyFolding  Whether to collapse single-key chains into dotted paths.
      * @param  int|float  $flattenDepth  Maximum segments to fold (default INF for unlimited).
      */
     public function __construct(
-        public int $indent = 2,
+        public int $indentSize = 2,
         public Delimiter $delimiter = Delimiter::Comma,
         public KeyFolding $keyFolding = KeyFolding::Off,
         public int|float $flattenDepth = INF,
@@ -31,7 +31,7 @@ readonly class EncoderOptions
     public static function compact(): self
     {
         return new self(
-            indent: 1,
+            indentSize: 1,
             keyFolding: KeyFolding::Safe,
         );
     }

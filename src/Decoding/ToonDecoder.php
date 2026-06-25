@@ -50,7 +50,7 @@ class ToonDecoder
         }
 
         $rawLines = explode("\n", $input);
-        $indent = $this->options->indent ?? $this->detectIndent($rawLines);
+        $indent = $this->options->indentSize ?? $this->detectIndent($rawLines);
         $parsed = [];
 
         foreach ($rawLines as $i => $line) {
@@ -127,6 +127,10 @@ class ToonDecoder
 
         if ($header !== null && $first['depth'] === 0 && $header['key'] !== null) {
             return $this->decodeObject(0);
+        }
+
+        if ($firstText === '[]' && count(array_values($nonBlank)) === 1) {
+            return [];
         }
 
         if (str_contains($firstText, ':')) {

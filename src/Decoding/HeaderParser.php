@@ -40,7 +40,7 @@ class HeaderParser
         }
 
         $bracketContent = substr($remaining, 1, $bracketEnd - 1);
-        $parsed = self::parseBracket($bracketContent);
+        $parsed = self::parseBracket($bracketContent, $strict, $lineNumber);
 
         if ($parsed === null) {
             return null;
@@ -54,6 +54,10 @@ class HeaderParser
             $braceStart = strpos($remaining, '{');
 
             if (trim(substr($remaining, 0, $braceStart)) !== '') {
+                if ($strict) {
+                    throw new ToonStrictModeException('Content between bracket and field list is not allowed', $lineNumber);
+                }
+
                 return null;
             }
 
@@ -151,7 +155,7 @@ class HeaderParser
     /**
      * @return array{length: int, delimiter: Delimiter}|null
      */
-    private static function parseBracket(string $content): ?array
+    private static function parseBracket(string $content, bool $strict = false, ?int $lineNumber = null): ?array
     {
         $delimiter = Delimiter::Comma;
 
@@ -165,6 +169,10 @@ class HeaderParser
 
         if (! preg_match('/^\d+$/', $content)) {
             return null;
+        }
+
+        if ($strict && strlen($content) > 1 && $content[0] === '0') {
+            throw new ToonStrictModeException("Malformed bracket length '$content': leading zeros not allowed", $lineNumber);
         }
 
         return [

@@ -15,7 +15,7 @@ This creates `config/toon.php` in your application.
 ```php
 // config/toon.php
 return [
-    'indent' => 2,
+    'indent_size' => 2,
     'delimiter' => 'comma',
     'key_folding' => 'off',
     'flatten_depth' => INF,
@@ -29,7 +29,7 @@ return [
 
 | Key | Default | Values | Description |
 |-----|---------|--------|-------------|
-| `indent` | `2` | Any positive integer | Spaces per indentation level |
+| `indent_size` | `2` | Any positive integer | Spaces per indentation level |
 | `delimiter` | `'comma'` | `'comma'`, `'tab'`, `'pipe'` | Value separator in arrays |
 | `key_folding` | `'off'` | `'off'`, `'safe'` | Collapse single-key chains to dotted paths |
 | `flatten_depth` | `INF` | Any positive integer or `INF` | Max segments to fold when key folding is enabled |

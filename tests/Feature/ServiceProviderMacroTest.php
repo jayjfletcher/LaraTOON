@@ -57,6 +57,6 @@ test('it publishes toon config', function () {
 });
 
 test('it merges default config', function () {
-    expect(config('toon.indent'))->toBe(2);
+    expect(config('toon.indent_size'))->toBe(2);
     expect(config('toon.strict'))->toBe(true);
 });

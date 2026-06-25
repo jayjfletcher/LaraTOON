@@ -137,7 +137,7 @@ it('decodes only blank lines as empty array', function () {
 });
 
 it('detects indent from first indented line', function () {
-    $decoder = new ToonDecoder(new DecoderOptions(indent: null));
+    $decoder = new ToonDecoder(new DecoderOptions(indentSize: null));
 
     $result = $decoder->decode("user:\n    id: 1\n    name: Ada");
 

@@ -1,6 +1,6 @@
 # TOON Format Reference
 
-TOON (Token-Oriented Object Notation) v3.0 is a line-oriented, indentation-based text format that encodes the JSON data model with explicit structure and minimal quoting.
+TOON (Token-Oriented Object Notation) v3.3 is a line-oriented, indentation-based text format that encodes the JSON data model with explicit structure and minimal quoting.
 
 For the full specification, see [toonformat.dev/reference/spec.md](https://toonformat.dev/reference/spec.md).
 

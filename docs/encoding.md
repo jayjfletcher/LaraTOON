@@ -14,7 +14,7 @@ use Jayi\Toon\Encoding\EncoderOptions;
 use Jayi\Toon\Enums\Delimiter;
 
 $toon = Toon::encode($data);
-$toon = Toon::encode($data, new EncoderOptions(indent: 4));
+$toon = Toon::encode($data, new EncoderOptions(indentSize: 4));
 $toon = Toon::encode($data, new EncoderOptions(delimiter: Delimiter::Pipe));
 ```
 
@@ -45,7 +45,7 @@ All options are passed via the `EncoderOptions` value object:
 use Jayi\Toon\Encoding\EncoderOptions;
 
 $options = new EncoderOptions(
-    indent: 2,
+    indentSize: 2,
     delimiter: Delimiter::Comma,
     keyFolding: KeyFolding::Off,
     flattenDepth: INF,
@@ -54,7 +54,7 @@ $options = new EncoderOptions(
 
 | Option | Default | Description |
 |--------|---------|-------------|
-| `indent` | `2` | Spaces per indentation level |
+| `indentSize` | `2` | Spaces per indentation level |
 | `delimiter` | `Comma` | Value separator: `Comma`, `Tab`, or `Pipe` |
 | `keyFolding` | `Off` | `Off` or `Safe`. When Safe, collapses single-key chains to dotted paths |
 | `flattenDepth` | `INF` | Max segments to fold when key folding is enabled |
@@ -62,7 +62,7 @@ $options = new EncoderOptions(
 ### Presets
 
 ```php
-EncoderOptions::compact(); // indent=1, keyFolding=Safe
+EncoderOptions::compact(); // indentSize=1, keyFolding=Safe
 ```
 
 ## Type Normalization

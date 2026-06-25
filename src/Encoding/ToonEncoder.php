@@ -29,7 +29,7 @@ class ToonEncoder
         private readonly EncoderOptions $options = new EncoderOptions,
     ) {
         $this->documentDelimiter = $options->delimiter;
-        $this->indent = $options->indent;
+        $this->indent = $options->indentSize;
     }
 
     public function encode(mixed $data): string

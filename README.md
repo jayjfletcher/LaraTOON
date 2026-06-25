@@ -1,6 +1,6 @@
 # Toon
 
-A PHP Laravel package for encoding and decoding [TOON (Token-Oriented Object Notation)](https://toonformat.dev) v3.0.
+A PHP Laravel package for encoding and decoding [TOON (Token-Oriented Object Notation)](https://toonformat.dev) v3.3.
 
 TOON is a line-oriented, indentation-based text format that encodes the JSON data model with explicit structure and minimal quoting. It is particularly efficient for arrays of uniform objects, reducing token count by 35-58% compared to JSON.
 

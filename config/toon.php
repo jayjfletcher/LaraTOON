@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'indent' => 2,
+    'indent_size' => 2,
     'delimiter' => 'comma',
     'key_folding' => 'off',
     'flatten_depth' => INF,
