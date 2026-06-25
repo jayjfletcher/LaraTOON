@@ -30,7 +30,7 @@ it('decodes key with empty value after colon and space', function () {
 
     $result = $decoder->decode("key: ");
 
-    expect($result)->toBe(['key' => []]);
+    expect($result)->toEqual(['key' => new \stdClass]);
 });
 
 it('skips lines without colon in non-strict mode', function () {
@@ -200,7 +200,7 @@ it('decodes list item object with empty value key', function () {
 
     $result = $decoder->decode("[1]:\n  - key:");
 
-    expect($result)->toBe([['key' => []]]);
+    expect($result)->toEqual([['key' => new \stdClass]]);
 });
 
 it('decodes list item object with nested object fields', function () {
@@ -244,7 +244,7 @@ it('decodes object field with empty value after colon in list context', function
 
     $result = $decoder->decode($input);
 
-    expect($result)->toBe([['name' => 'Ada', 'items' => []]]);
+    expect($result)->toEqual([['name' => 'Ada', 'items' => new \stdClass]]);
 });
 
 it('decodes with path expansion off returns raw dotted keys', function () {

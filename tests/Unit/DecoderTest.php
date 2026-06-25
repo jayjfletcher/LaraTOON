@@ -162,7 +162,7 @@ it('decodes empty nested object', function () {
 
     $result = $decoder->decode("root:\n  level1:");
 
-    expect($result)->toBe(['root' => ['level1' => []]]);
+    expect($result)->toEqual(['root' => ['level1' => new \stdClass]]);
 });
 
 it('preserves key order', function () {

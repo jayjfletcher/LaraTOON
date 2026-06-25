@@ -234,7 +234,7 @@ class ToonDecoder
                 $nextDepthLines = $this->peekNextDepthLines($depth + 1);
 
                 if (empty($nextDepthLines)) {
-                    $result[$key] = [];
+                    $result[$key] = new \stdClass;
                 } else {
                     $result[$key] = $this->decodeObject($depth + 1);
                 }
@@ -250,7 +250,7 @@ class ToonDecoder
 
             if ($value === '') {
                 $this->pos++;
-                $result[$key] = [];
+                $result[$key] = new \stdClass;
 
                 continue;
             }
@@ -473,7 +473,7 @@ class ToonDecoder
                 $nextDepthLines = $this->peekNextDepthLines($depth + 2);
 
                 if (empty($nextDepthLines)) {
-                    $obj[$key] = [];
+                    $obj[$key] = new \stdClass;
                 } else {
                     $obj[$key] = $this->decodeObject($depth + 2);
                 }
@@ -536,7 +536,7 @@ class ToonDecoder
                 $nextDepthLines = $this->peekNextDepthLines($depth + 1);
 
                 if (empty($nextDepthLines)) {
-                    $obj[$key] = [];
+                    $obj[$key] = new \stdClass;
                 } else {
                     $obj[$key] = $this->decodeObject($depth + 1);
                 }

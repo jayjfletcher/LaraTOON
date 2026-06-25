@@ -50,6 +50,14 @@ class ToonEncoder
             return $this->encodePrimitive($value, $depth, $key, $this->documentDelimiter);
         }
 
+        if ($value instanceof \stdClass) {
+            if ($key !== null) {
+                return $this->prefix($depth).$this->encodeKeyStr($key).':';
+            }
+
+            return '';
+        }
+
         if (! is_array($value)) {
             throw new ToonEncodeException('Unsupported value type: '.get_debug_type($value));
         }
@@ -372,6 +380,16 @@ class ToonEncoder
 
         if (is_array($value)) {
             return array_map(fn (mixed $v) => $this->normalize($v), $value);
+        }
+
+        if ($value instanceof \stdClass) {
+            $arr = (array) $value;
+
+            if (empty($arr)) {
+                return new \stdClass;
+            }
+
+            return $this->normalize($arr);
         }
 
         if (is_object($value)) {
