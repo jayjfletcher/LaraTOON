@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
 use Jayi\Toon\Encoding\EncoderOptions;
 use Jayi\Toon\Enums\KeyFolding;
+use Jayi\Toon\ToonServiceProvider;
 
 test('it registers the JsonResponse toToon macro', function () {
     expect(JsonResponse::hasMacro('toToon'))->toBeTrue();
@@ -12,15 +12,11 @@ test('it registers the JsonResponse toToon macro', function () {
 test('it converts a JsonResponse to toon', function () {
     $response = new JsonResponse(['id' => 1, 'name' => 'Ada']);
 
-    // JsonResponse macro calls $this->toArray() which doesn't exist on JsonResponse,
-    // but the macro is registered. Use getData to verify the macro is accessible.
-    // The macro implementation uses toArray() which is a bug in the service provider
-    // but we test that the macro exists and the intent works via getData + Toon::encode.
-    $data = json_decode($response->getContent(), true);
-    $result = \Jayi\Toon\Toon::encode($data);
+    $result = $response->toToon();
 
-    expect($result)->toContain('id: 1');
-    expect($result)->toContain('name: Ada');
+    expect($result)
+        ->toContain('id: 1')
+        ->toContain('name: Ada');
 });
 
 test('it converts a JsonResponse with nested data to toon', function () {
@@ -31,8 +27,7 @@ test('it converts a JsonResponse with nested data to toon', function () {
         ],
     ]);
 
-    $data = json_decode($response->getContent(), true);
-    $result = \Jayi\Toon\Toon::encode($data);
+    $result = $response->toToon();
 
     expect($result)->toContain('users[2]{id,name}:');
 });
@@ -42,14 +37,21 @@ test('it accepts encoder options on JsonResponse toToon', function () {
         'a' => ['b' => ['c' => 1]],
     ]);
 
-    $data = json_decode($response->getContent(), true);
-    $result = \Jayi\Toon\Toon::encode($data, new EncoderOptions(keyFolding: KeyFolding::Safe));
+    $result = $response->toToon(new EncoderOptions(keyFolding: KeyFolding::Safe));
 
     expect($result)->toBe('a.b.c: 1');
 });
 
+test('it encodes null JsonResponse data as empty object', function () {
+    $response = new JsonResponse(null);
+
+    $result = $response->toToon();
+
+    expect($result)->toBe('[]');
+});
+
 test('it publishes toon config', function () {
-    $provider = app()->getProvider(\Jayi\Toon\ToonServiceProvider::class);
+    $provider = app()->getProvider(ToonServiceProvider::class);
 
     $paths = $provider::$publishGroups['toon-config'] ?? [];
 
@@ -57,6 +59,6 @@ test('it publishes toon config', function () {
 });
 
 test('it merges default config', function () {
-    expect(config('toon.indent_size'))->toBe(2);
-    expect(config('toon.strict'))->toBe(true);
+    expect(config('toon.indent_size'))->toBe(2)
+        ->and(config('toon.strict'))->toBeTrue();
 });

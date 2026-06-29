@@ -104,13 +104,17 @@ class HeaderParser
             return 0;
         }
 
-        for ($i = 0; $i < strlen($line); $i++) {
+        $len = strlen($line);
+
+        for ($i = 0; $i < $len; $i++) {
             $ch = $line[$i];
 
             if ($ch === '"') {
                 // Skip the quoted span, honoring backslash escapes, so brackets
                 // inside quotes are not mistaken for the array start.
-                for ($j = $i + 1; $j < strlen($line); $j++) {
+                $closed = false;
+
+                for ($j = $i + 1; $j < $len; $j++) {
                     if ($line[$j] === '\\') {
                         $j++;
 
@@ -119,9 +123,14 @@ class HeaderParser
 
                     if ($line[$j] === '"') {
                         $i = $j;
+                        $closed = true;
 
                         break;
                     }
+                }
+
+                if (! $closed) {
+                    return null;
                 }
 
                 continue;
@@ -187,7 +196,13 @@ class HeaderParser
                 // Check for unquoted occurrence of a different structural delimiter
                 $hasOther = false;
                 $inQ = false;
-                for ($i = 0; $i < strlen($content); $i++) {
+                $cLen = strlen($content);
+                for ($i = 0; $i < $cLen; $i++) {
+                    if ($inQ && $content[$i] === '\\') {
+                        $i++;
+
+                        continue;
+                    }
                     if ($content[$i] === '"') {
                         $inQ = ! $inQ;
 
