@@ -15,7 +15,7 @@ use Jayi\Toon\Exceptions\ToonStrictModeException;
  */
 class ToonDecoder
 {
-    /** @var array{text: string, depth: int, num: int}[] */
+    /** @var array{text: string, depth: int, num: int, blank: bool}[] */
     private array $lines = [];
 
     private int $pos = 0;
@@ -39,7 +39,7 @@ class ToonDecoder
     }
 
     /**
-     * @return array{text: string, depth: int, num: int}[]
+     * @return array{text: string, depth: int, num: int, blank: bool}[]
      */
     private function parseLines(string $input): array
     {
@@ -125,7 +125,7 @@ class ToonDecoder
             return $this->decodeRootArray($header);
         }
 
-        if ($header !== null && $first['depth'] === 0 && $header['key'] !== null) {
+        if ($header !== null && $first['depth'] === 0) {
             return $this->decodeObject(0);
         }
 
@@ -438,7 +438,7 @@ class ToonDecoder
             return $this->decodeListItems($header['length'], $depth + 1);
         }
 
-        if ($header !== null && $header['key'] !== null) {
+        if ($header !== null) {
             $this->pos++;
             $obj = [];
 
@@ -601,7 +601,7 @@ class ToonDecoder
     }
 
     /**
-     * @return array{text: string, depth: int, num: int}[]
+     * @return array{text: string, depth: int, num: int, blank: bool}[]
      */
     private function peekNextDepthLines(int $depth): array
     {

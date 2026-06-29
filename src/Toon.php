@@ -40,7 +40,7 @@ class Toon
      */
     public static function smart(mixed $data): string
     {
-        return static::shouldUseCompact($data)
+        return self::shouldUseCompact($data)
             ? static::compact($data)
             : static::encode($data);
     }
@@ -54,7 +54,7 @@ class Toon
         $maxDepth = 0;
         $hasFoldable = false;
 
-        static::inspectStructure($data, 0, $maxDepth, $hasFoldable);
+        self::inspectStructure($data, 0, $maxDepth, $hasFoldable);
 
         return $hasFoldable || $maxDepth >= 4;
     }
@@ -82,7 +82,7 @@ class Toon
                 }
             }
 
-            static::inspectStructure($value, $depth + 1, $maxDepth, $hasFoldable);
+            self::inspectStructure($value, $depth + 1, $maxDepth, $hasFoldable);
         }
     }
 

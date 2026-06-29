@@ -37,7 +37,7 @@ class ToonServiceProvider extends ServiceProvider
         });
 
         Builder::macro('toToon', function (?EncoderOptions $options = null): string {
-            /** @var Collection $this */
+            /** @var Builder $this */
             return Toon::encode($this->getModel()->toArray(), $options);
         });
 

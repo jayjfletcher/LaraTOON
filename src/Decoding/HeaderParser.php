@@ -104,36 +104,30 @@ class HeaderParser
             return 0;
         }
 
-        $inQuotes = false;
-
         for ($i = 0; $i < strlen($line); $i++) {
             $ch = $line[$i];
 
             if ($ch === '"') {
-                $inQuotes = ! $inQuotes;
+                // Skip the quoted span, honoring backslash escapes, so brackets
+                // inside quotes are not mistaken for the array start.
+                for ($j = $i + 1; $j < strlen($line); $j++) {
+                    if ($line[$j] === '\\') {
+                        $j++;
 
-                if ($inQuotes) {
-                    for ($j = $i + 1; $j < strlen($line); $j++) {
-                        if ($line[$j] === '\\') {
-                            $j++;
-
-                            continue;
-                        }
-
-                        if ($line[$j] === '"') {
-                            $i = $j;
-
-                            break;
-                        }
+                        continue;
                     }
 
-                    $inQuotes = false;
+                    if ($line[$j] === '"') {
+                        $i = $j;
+
+                        break;
+                    }
                 }
 
                 continue;
             }
 
-            if ($ch === '[' && ! $inQuotes) {
+            if ($ch === '[') {
                 return $i;
             }
         }

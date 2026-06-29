@@ -116,7 +116,15 @@ class ValueDecoder
             return false;
         }
 
-        $num = $token + 0;
+        if (str_contains($token, '.') || str_contains($token, 'e') || str_contains($token, 'E')) {
+            $num = (float) $token;
+        } else {
+            $int = (int) $token;
+
+            // Fall back to float when the integer overflows PHP_INT_MAX, so the
+            // magnitude is preserved instead of silently clamping to the max int.
+            $num = ((string) $int === $token) ? $int : (float) $token;
+        }
 
         if (is_int($num)) {
             return $num;
