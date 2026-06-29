@@ -104,36 +104,39 @@ class HeaderParser
             return 0;
         }
 
-        $inQuotes = false;
+        $len = strlen($line);
 
-        for ($i = 0; $i < strlen($line); $i++) {
+        for ($i = 0; $i < $len; $i++) {
             $ch = $line[$i];
 
             if ($ch === '"') {
-                $inQuotes = ! $inQuotes;
+                // Skip the quoted span, honoring backslash escapes, so brackets
+                // inside quotes are not mistaken for the array start.
+                $closed = false;
 
-                if ($inQuotes) {
-                    for ($j = $i + 1; $j < strlen($line); $j++) {
-                        if ($line[$j] === '\\') {
-                            $j++;
+                for ($j = $i + 1; $j < $len; $j++) {
+                    if ($line[$j] === '\\') {
+                        $j++;
 
-                            continue;
-                        }
-
-                        if ($line[$j] === '"') {
-                            $i = $j;
-
-                            break;
-                        }
+                        continue;
                     }
 
-                    $inQuotes = false;
+                    if ($line[$j] === '"') {
+                        $i = $j;
+                        $closed = true;
+
+                        break;
+                    }
+                }
+
+                if (! $closed) {
+                    return null;
                 }
 
                 continue;
             }
 
-            if ($ch === '[' && ! $inQuotes) {
+            if ($ch === '[') {
                 return $i;
             }
         }
@@ -193,7 +196,13 @@ class HeaderParser
                 // Check for unquoted occurrence of a different structural delimiter
                 $hasOther = false;
                 $inQ = false;
-                for ($i = 0; $i < strlen($content); $i++) {
+                $cLen = strlen($content);
+                for ($i = 0; $i < $cLen; $i++) {
+                    if ($inQ && $content[$i] === '\\') {
+                        $i++;
+
+                        continue;
+                    }
                     if ($content[$i] === '"') {
                         $inQ = ! $inQ;
 

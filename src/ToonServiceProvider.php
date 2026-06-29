@@ -37,13 +37,13 @@ class ToonServiceProvider extends ServiceProvider
         });
 
         Builder::macro('toToon', function (?EncoderOptions $options = null): string {
-            /** @var Collection $this */
-            return Toon::encode($this->getModel()->toArray(), $options);
+            /** @var Builder $this */
+            return Toon::encode($this->get()->toArray(), $options);
         });
 
         JsonResponse::macro('toToon', function (?EncoderOptions $options = null): string {
-            /** @var Collection $this */
-            return Toon::encode($this->toArray(), $options);
+            /** @var JsonResponse $this */
+            return Toon::encode($this->getData(true) ?? [], $options);
         });
 
         if (class_exists('\Laravel\Mcp\Response')) {

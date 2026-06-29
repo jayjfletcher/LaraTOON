@@ -79,7 +79,7 @@ class ValueEncoder
             return true;
         }
 
-        if (preg_match('/[\x00-\x1F]/', $value)) {
+        if (preg_match('/[\x00-\x1F\x7F]/', $value)) {
             return true;
         }
 
@@ -109,7 +109,7 @@ class ValueEncoder
                 $ch === "\n" => '\\n',
                 $ch === "\r" => '\\r',
                 $ch === "\t" => '\\t',
-                $ord >= 0x00 && $ord <= 0x1F => sprintf('\\u%04x', $ord),
+                $ord <= 0x1F || $ord === 0x7F => sprintf('\\u%04x', $ord),
                 default => $ch,
             };
         }

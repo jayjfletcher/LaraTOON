@@ -343,7 +343,7 @@ class ToonEncoder
                 return null;
             }
 
-            if ($value === -0.0 && 1 / $value === -INF) {
+            if ($value === -0.0 && fdiv(1.0, $value) === -INF) {
                 return 0;
             }
 
@@ -412,10 +412,6 @@ class ToonEncoder
 
         foreach ($items as $item) {
             if (! is_array($item) || array_is_list($item)) {
-                return null;
-            }
-
-            if (empty($item)) {
                 return null;
             }
 
