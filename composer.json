@@ -10,7 +10,9 @@
     "require-dev": {
         "orchestra/testbench": "^11.0",
         "pestphp/pest": "^4.0",
-        "pestphp/pest-plugin-laravel": "^4.0"
+        "pestphp/pest-plugin-laravel": "^4.0",
+        "laravel/pint": "^1.29",
+        "larastan/larastan": "^3.10"
     },
     "autoload": {
         "psr-4": {
@@ -43,7 +45,13 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/pest"
+        "test": "vendor/bin/pest",
+        "phpstan": "vendor/bin/phpstan analyse --memory-limit=2G",
+        "pint": "vendor/bin/pint -v --preset laravel",
+        "pint:test": "vendor/bin/pint --test --preset laravel",
+        "post-install-cmd": [
+            "@php bin/install-git-hooks.php"
+        ]
     },
     "minimum-stability": "dev",
     "prefer-stable": true

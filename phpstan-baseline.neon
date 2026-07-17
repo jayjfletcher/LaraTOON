@@ -1,0 +1,31 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
+			identifier: larastan.noEnvCallsOutsideOfConfig
+			count: 1
+			path: config/toon.php
+
+		-
+			message: '#^Call to method append\(\) on an unknown class Laravel\\Ai\\Prompts\\AgentPrompt\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Overrides/Laravel/Ai/ToonMiddleware.php
+
+		-
+			message: '#^Parameter \$prompt of method Jayi\\Toon\\Overrides\\Laravel\\Ai\\ToonMiddleware\:\:handle\(\) has invalid type Laravel\\Ai\\Prompts\\AgentPrompt\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Overrides/Laravel/Ai/ToonMiddleware.php
+
+		-
+			message: '#^Trait Jayi\\Toon\\Overrides\\Laravel\\Mcp\\EncodesToonToolResults is used zero times and is not analysed\.$#'
+			identifier: trait.unused
+			count: 1
+			path: src/Overrides/Laravel/Mcp/EncodesToonToolResults.php
+
+		-
+			message: '#^Array has 2 duplicate keys with value ''a\.b'' \(''a\.b'', ''a\.b''\)\.$#'
+			identifier: array.duplicateKey
+			count: 1
+			path: tests/Unit/PathExpanderTest.php

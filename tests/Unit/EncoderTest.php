@@ -3,6 +3,7 @@
 use Jayi\Toon\Encoding\EncoderOptions;
 use Jayi\Toon\Encoding\ToonEncoder;
 use Jayi\Toon\Enums\KeyFolding;
+use Jayi\Toon\Toon;
 
 it('encodes a simple object', function () {
     $encoder = new ToonEncoder;
@@ -65,7 +66,7 @@ it('encodes a mixed array', function () {
         'items' => [1, 'text', true],
     ]);
 
-    expect($result)->toBe("items[3]: 1,text,true");
+    expect($result)->toBe('items[3]: 1,text,true');
 });
 
 it('encodes arrays of arrays', function () {
@@ -229,7 +230,7 @@ it('estimates token savings', function () {
         ],
     ];
 
-    $result = \Jayi\Toon\Toon::savings($data);
+    $result = Toon::savings($data);
 
     expect($result)->toHaveKeys(['json_chars', 'toon_chars', 'saved_chars', 'saved_percent']);
     expect($result['saved_chars'])->toBeGreaterThan(0);
@@ -245,8 +246,8 @@ it('produces smaller output with compact preset', function () {
         ]]]],
     ];
 
-    $default = \Jayi\Toon\Toon::encode($data);
-    $compact = \Jayi\Toon\Toon::compact($data);
+    $default = Toon::encode($data);
+    $compact = Toon::compact($data);
 
     expect(strlen($compact))->toBeLessThan(strlen($default));
     expect($compact)->toContain('a.b.c.items');
@@ -255,7 +256,7 @@ it('produces smaller output with compact preset', function () {
 it('compact uses indent of 1 and key folding', function () {
     $data = ['parent' => ['child' => 'value']];
 
-    $compact = \Jayi\Toon\Toon::compact($data);
+    $compact = Toon::compact($data);
 
     // Key folding collapses single-key chains
     expect($compact)->toBe('parent.child: value');
@@ -264,7 +265,7 @@ it('compact uses indent of 1 and key folding', function () {
 it('smart picks compact for deeply nested data', function () {
     $data = ['a' => ['b' => ['c' => ['d' => 1]]]];
 
-    $result = \Jayi\Toon\Toon::smart($data);
+    $result = Toon::smart($data);
 
     expect($result)->toBe('a.b.c.d: 1');
 });
@@ -272,8 +273,8 @@ it('smart picks compact for deeply nested data', function () {
 it('smart picks default for flat data', function () {
     $data = ['id' => 1, 'name' => 'Ada'];
 
-    $smart = \Jayi\Toon\Toon::smart($data);
-    $default = \Jayi\Toon\Toon::encode($data);
+    $smart = Toon::smart($data);
+    $default = Toon::encode($data);
 
     expect($smart)->toBe($default);
 });

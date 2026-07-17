@@ -3,6 +3,7 @@
 use Jayi\Toon\Decoding\DecoderOptions;
 use Jayi\Toon\Decoding\ToonDecoder;
 use Jayi\Toon\Enums\PathExpansion;
+use Jayi\Toon\Exceptions\ToonDecodeException;
 use Jayi\Toon\Exceptions\ToonStrictModeException;
 
 it('decodes a simple object', function () {
@@ -162,7 +163,7 @@ it('decodes empty nested object', function () {
 
     $result = $decoder->decode("root:\n  level1:");
 
-    expect($result)->toEqual(['root' => ['level1' => new \stdClass]]);
+    expect($result)->toEqual(['root' => ['level1' => new stdClass]]);
 });
 
 it('preserves key order', function () {
@@ -259,7 +260,7 @@ it('throws on invalid escape sequence', function () {
     $decoder = new ToonDecoder;
 
     $decoder->decode('name: "bad\\xescape"');
-})->throws(\Jayi\Toon\Exceptions\ToonDecodeException::class);
+})->throws(ToonDecodeException::class);
 
 it('throws on indentation errors in strict mode', function () {
     $decoder = new ToonDecoder(new DecoderOptions(indentSize: 2));
@@ -301,7 +302,7 @@ it('rejects lone surrogate \\uXXXX in strict mode', function () {
     $decoder = new ToonDecoder;
 
     $decoder->decode('msg: "\\ud800"');
-})->throws(\Jayi\Toon\Exceptions\ToonDecodeException::class);
+})->throws(ToonDecodeException::class);
 
 it('throws on duplicate keys in strict mode', function () {
     $decoder = new ToonDecoder;

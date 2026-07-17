@@ -16,7 +16,7 @@ it('decodes blank lines between object keys', function () {
 it('throws on trailing spaces in strict mode', function () {
     $decoder = new ToonDecoder(new DecoderOptions(strict: true));
 
-    $decoder->decode("name: Ada   ");
+    $decoder->decode('name: Ada   ');
 })->throws(ToonStrictModeException::class);
 
 it('throws on tab indentation in strict mode', function () {
@@ -28,9 +28,9 @@ it('throws on tab indentation in strict mode', function () {
 it('decodes key with empty value after colon and space', function () {
     $decoder = new ToonDecoder(new DecoderOptions(strict: false));
 
-    $result = $decoder->decode("key: ");
+    $result = $decoder->decode('key: ');
 
-    expect($result)->toEqual(['key' => new \stdClass]);
+    expect($result)->toEqual(['key' => new stdClass]);
 });
 
 it('skips lines without colon in non-strict mode', function () {
@@ -101,7 +101,7 @@ it('decodes with auto path expansion when no dotted keys exist', function () {
 it('decodes with auto path expansion when dotted keys exist', function () {
     $decoder = new ToonDecoder(new DecoderOptions(expandPaths: PathExpansion::Auto));
 
-    $result = $decoder->decode("user.name: Ada");
+    $result = $decoder->decode('user.name: Ada');
 
     expect($result)->toBe(['user' => ['name' => 'Ada']]);
 });
@@ -200,7 +200,7 @@ it('decodes list item object with empty value key', function () {
 
     $result = $decoder->decode("[1]:\n  - key:");
 
-    expect($result)->toEqual([['key' => new \stdClass]]);
+    expect($result)->toEqual([['key' => new stdClass]]);
 });
 
 it('decodes list item object with nested object fields', function () {
@@ -244,7 +244,7 @@ it('decodes object field with empty value after colon in list context', function
 
     $result = $decoder->decode($input);
 
-    expect($result)->toEqual([['name' => 'Ada', 'items' => new \stdClass]]);
+    expect($result)->toEqual([['name' => 'Ada', 'items' => new stdClass]]);
 });
 
 it('decodes with path expansion off returns raw dotted keys', function () {
