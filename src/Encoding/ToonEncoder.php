@@ -229,6 +229,13 @@ class ToonEncoder
 
     private function encodeListItem(mixed $item, int $depth): string
     {
+        if ($item instanceof \stdClass) {
+            // Empty object as a list item: a bare dash, mirroring the empty-map
+            // branch of encodeObjectListItem (a non-empty stdClass is normalized
+            // to an array before reaching here).
+            return $this->prefix($depth).'-';
+        }
+
         if (is_array($item) && ! array_is_list($item)) {
             return $this->encodeObjectListItem($item, $depth);
         }

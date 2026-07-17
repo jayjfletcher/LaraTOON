@@ -19,7 +19,7 @@ class PathExpander
      */
     public const string LITERAL_KEY_MARKER = "\0";
 
-    private const string IDENTIFIER_PATTERN = '/^[A-Za-z_][A-Za-z0-9_]*$/';
+    private const string IDENTIFIER_PATTERN = '/^[A-Za-z_][A-Za-z0-9_]*$/D';
 
     public function __construct(
         private readonly bool $strict = true,

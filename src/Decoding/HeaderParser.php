@@ -50,18 +50,16 @@ class HeaderParser
 
         $fields = null;
 
-        if (str_contains($remaining, '{')) {
+        // A field list, when present, is the segment immediately after the
+        // bracket: `[N]{...}:`. Only treat a `{` as the field-list opener when it
+        // is the first non-space character after `]` — otherwise a `{` inside a
+        // later inline/quoted value would be mistaken for a field list.
+        if (str_starts_with(ltrim($remaining), '{')) {
             $braceStart = strpos($remaining, '{');
 
-            if (trim(substr($remaining, 0, $braceStart)) !== '') {
-                if ($strict) {
-                    throw new ToonStrictModeException('Content between bracket and field list is not allowed', $lineNumber);
-                }
-
-                return null;
-            }
-
-            $braceEnd = strpos($remaining, '}', $braceStart);
+            // Scan for the closing brace outside of quotes, so a quoted field
+            // name containing `}` does not terminate the field list early.
+            $braceEnd = self::findUnquotedChar($remaining, '}', $braceStart + 1);
 
             if ($braceEnd === false) {
                 return null;
@@ -178,7 +176,7 @@ class HeaderParser
             $content = rtrim($content, '|');
         }
 
-        if (! preg_match('/^\d+$/', $content)) {
+        if (! preg_match('/^\d+$/D', $content)) {
             return null;
         }
 
@@ -243,6 +241,40 @@ class HeaderParser
     /**
      * @return string[]
      */
+    /**
+     * Find the first occurrence of $char at or after $start that is not inside
+     * a double-quoted span (honoring backslash escapes).
+     */
+    private static function findUnquotedChar(string $text, string $char, int $start): int|false
+    {
+        $inQuotes = false;
+        $len = strlen($text);
+
+        for ($i = $start; $i < $len; $i++) {
+            $ch = $text[$i];
+
+            if ($ch === '"') {
+                $inQuotes = ! $inQuotes;
+
+                continue;
+            }
+
+            if ($inQuotes) {
+                if ($ch === '\\' && $i + 1 < $len) {
+                    $i++;
+                }
+
+                continue;
+            }
+
+            if ($ch === $char) {
+                return $i;
+            }
+        }
+
+        return false;
+    }
+
     public static function splitDelimited(string $content, Delimiter $delimiter): array
     {
         $result = [];

@@ -16,7 +16,7 @@ class KeyFolder
      */
     public const string FOLDED_KEY_MARKER = "\0";
 
-    private const IDENTIFIER_PATTERN = '/^[A-Za-z_][A-Za-z0-9_]*$/';
+    private const IDENTIFIER_PATTERN = '/^[A-Za-z_][A-Za-z0-9_]*$/D';
 
     public function __construct(
         private readonly int|float $flattenDepth = INF,

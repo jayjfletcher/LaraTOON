@@ -75,20 +75,36 @@ class NumberEncoder
 
     private static function formatExponent(float $abs): string
     {
-        // §2: outside canonical range, emit JSON-number exponent form (lowercase e, explicit sign)
-        $str = sprintf('%.17e', $abs);
-        // Normalize: strip trailing zeros in mantissa, use lowercase e+XX format
-        preg_match('/^(\d+\.\d+?)0*e([+-]\d+)$/', $str, $m);
+        // §2: outside the canonical range, emit JSON-number exponent form. Use the
+        // fewest mantissa digits that still round-trip (spec: shortest form, no
+        // trailing zeros), then normalize to lowercase e with an explicit sign.
+        $str = self::shortestRoundtripExponent($abs);
+
+        preg_match('/^(\d+)(?:\.(\d+))?[eE]([+-]?\d+)$/', $str, $m);
 
         if (empty($m)) {
             return $str;
         }
 
-        $mantissa = rtrim($m[1], '.');
-        $exp = (int) $m[2];
+        $frac = rtrim($m[2], '0');
+        $mantissa = $frac === '' ? $m[1] : $m[1].'.'.$frac;
+        $exp = (int) $m[3];
         $sign = $exp >= 0 ? '+' : '-';
 
         return $mantissa.'e'.$sign.abs($exp);
+    }
+
+    private static function shortestRoundtripExponent(float $abs): string
+    {
+        for ($precision = 0; $precision <= 17; $precision++) {
+            $candidate = sprintf('%.'.$precision.'e', $abs);
+
+            if ((float) $candidate === $abs) {
+                return $candidate;
+            }
+        }
+
+        return sprintf('%.17e', $abs);
     }
 
     private static function expandScientific(string $sci): string

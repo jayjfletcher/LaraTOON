@@ -124,16 +124,18 @@ it('throws on blank lines inside array items in strict mode', function () {
     $decoder->decode("[2]:\n  - 1\n\n  - 2");
 })->throws(ToonStrictModeException::class);
 
-it('decodes empty string as empty array', function () {
+it('decodes empty string as empty object', function () {
+    // Spec §5: an empty document is an empty object.
     $decoder = new ToonDecoder;
 
-    expect($decoder->decode(''))->toBe([]);
+    expect($decoder->decode(''))->toEqual(new stdClass);
 });
 
-it('decodes only blank lines as empty array', function () {
+it('decodes only blank lines as empty object', function () {
+    // Spec §5: ignorable blank lines still yield an empty document → empty object.
     $decoder = new ToonDecoder;
 
-    expect($decoder->decode("\n\n\n"))->toBe([]);
+    expect($decoder->decode("\n\n\n"))->toEqual(new stdClass);
 });
 
 it('detects indent from first indented line', function () {
@@ -188,11 +190,12 @@ it('decodes root object with array header key', function () {
 });
 
 it('decodes list item with empty dash', function () {
+    // Spec §10: a bare dash decodes to an empty object, not an empty array.
     $decoder = new ToonDecoder;
 
     $result = $decoder->decode("[1]:\n  -");
 
-    expect($result)->toBe([[]]);
+    expect($result)->toEqual([new stdClass]);
 });
 
 it('decodes list item object with empty value key', function () {

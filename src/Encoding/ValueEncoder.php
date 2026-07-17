@@ -49,7 +49,9 @@ class ValueEncoder
      */
     public static function encodeKey(string $key): string
     {
-        if (preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $key)) {
+        // The /D modifier is required so a trailing newline in the key does not
+        // satisfy `$` (PHP's default), which would leave a raw newline unquoted.
+        if (preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/D', $key)) {
             return $key;
         }
 
@@ -70,11 +72,11 @@ class ValueEncoder
             return true;
         }
 
-        if (preg_match('/^-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?$/', $value)) {
+        if (preg_match('/^-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?$/D', $value)) {
             return true;
         }
 
-        if (preg_match('/^0\d+$/', $value)) {
+        if (preg_match('/^0\d+$/D', $value)) {
             return true;
         }
 

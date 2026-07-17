@@ -108,8 +108,8 @@ The delimiter character appears after the count in the header bracket (e.g., `[2
 | `null` | `null` |
 | `true` | `true` |
 | `false` | `false` |
-| Empty string | (empty value after colon) |
-| Empty object | `{}` |
+| Empty string | `""` (quoted, to distinguish from an empty object) |
+| Empty object | `key:` (bare colon, no value or children) |
 | Empty array | `[]` |
 
 ## Escaping

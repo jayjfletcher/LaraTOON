@@ -30,7 +30,8 @@ class ToonDecoder
         $this->pos = 0;
 
         if (empty($this->lines)) {
-            return $this->applyExpansion([]);
+            // An empty document decodes to an empty object per spec §5 (root forms).
+            return new \stdClass;
         }
 
         $result = $this->decodeRoot();
@@ -132,7 +133,8 @@ class ToonDecoder
         $nonBlank = array_filter($this->lines, fn (array $l) => ! $l['blank']);
 
         if (empty($nonBlank)) {
-            return [];
+            // Blank-only document is an empty document → empty object (spec §5).
+            return new \stdClass;
         }
 
         $first = reset($nonBlank);
@@ -422,7 +424,9 @@ class ToonDecoder
             $firstItemLine ??= $line['num'];
 
             if ($text === '-') {
-                $items[] = [];
+                // A bare dash is an empty-object list item per spec §10, not an
+                // empty array — this keeps `[{}]` round-tripping.
+                $items[] = new \stdClass;
                 $this->pos++;
 
                 continue;
@@ -496,6 +500,8 @@ class ToonDecoder
                 } else {
                     $obj[$key] = $this->decodeObject($depth + 2);
                 }
+            } elseif ($value === '[]') {
+                $obj[$key] = [];
             } else {
                 $obj[$key] = ValueDecoder::decode($value, $lineNum);
             }
@@ -561,7 +567,16 @@ class ToonDecoder
                 continue;
             }
 
-            $obj[$key] = ValueDecoder::decode(ltrim($afterColon), $lineNum);
+            $value = ltrim($afterColon);
+
+            if ($value === '[]') {
+                $this->pos++;
+                $obj[$key] = [];
+
+                continue;
+            }
+
+            $obj[$key] = ValueDecoder::decode($value, $lineNum);
             $this->pos++;
         }
     }
@@ -719,7 +734,19 @@ class ToonDecoder
 
     private function hasDottedKeys(mixed $data): bool
     {
-        if (! is_array($data) || array_is_list($data)) {
+        if (! is_array($data)) {
+            return false;
+        }
+
+        // Recurse through lists too: a dotted key can live inside a list-item
+        // object, and Auto expansion must still trigger for it.
+        if (array_is_list($data)) {
+            foreach ($data as $value) {
+                if ($this->hasDottedKeys($value)) {
+                    return true;
+                }
+            }
+
             return false;
         }
 
@@ -728,7 +755,7 @@ class ToonDecoder
                 return true;
             }
 
-            if (is_array($value) && $this->hasDottedKeys($value)) {
+            if ($this->hasDottedKeys($value)) {
                 return true;
             }
         }

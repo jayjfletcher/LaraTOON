@@ -225,9 +225,62 @@ it('roundtrips a root scalar containing a colon', function () {
     expect(roundtrip('note: hello'))->toBe('note: hello');
 });
 
-it('decodes an empty string to an empty array', function () {
-    // A root-level empty object encodes to '' and decodes back as [] —
-    // root empty objects are not distinguishable from empty arrays.
+it('roundtrips a root-level empty object', function () {
+    // Spec §5: a root empty object encodes to an empty document, which decodes
+    // back to an empty object (not an empty array).
     expect(Toon::encode(new stdClass))->toBe('');
-    expect(Toon::decode(''))->toBe([]);
+    expect(Toon::decode(''))->toEqual(new stdClass);
+});
+
+it('encodes out-of-range floats in shortest canonical exponent form', function () {
+    // Regression: formatExponent used to emit a full 17-digit mantissa
+    // (e.g. 9.99999999999999955e-8) instead of the shortest round-tripping form.
+    expect((new ToonEncoder)->encode(['a' => 1e-7]))->toBe('a: 1e-7');
+    expect((new ToonEncoder)->encode(['a' => 1e21]))->toBe('a: 1e+21');
+    expect((new ToonEncoder)->encode(['a' => 1.5e-8]))->toBe('a: 1.5e-8');
+});
+
+it('roundtrips an empty object as a list item', function () {
+    // Regression (Bug A/§10): stdClass in a list crashed the encoder; a bare
+    // dash must decode back to an empty object.
+    expect(roundtrip([new stdClass, new stdClass]))->toEqual([new stdClass, new stdClass]);
+});
+
+it('roundtrips an empty array as an object field inside a list item', function () {
+    // Regression (Bug B/G): `[]` as a field of a list-item object decoded to the
+    // string "[]" instead of an empty array — for both first and later fields.
+    expect(roundtrip(['x' => [['first' => [], 'second' => 1]]]))
+        ->toBe(['x' => [['first' => [], 'second' => 1]]]);
+    expect(roundtrip(['x' => [['first' => 1, 'second' => []]]]))
+        ->toBe(['x' => [['first' => 1, 'second' => []]]]);
+});
+
+it('roundtrips a key containing a trailing newline', function () {
+    // Regression (Bug E): PHP's `$` matched before a trailing newline, so the
+    // key regex left "a\n" unquoted, emitting a raw newline. /D fixes it.
+    expect(roundtrip(["a\n" => 1]))->toBe(["a\n" => 1]);
+    expect(roundtrip(['x' => [["a\n" => 1, 'b' => 2]]]))->toBe(['x' => [["a\n" => 1, 'b' => 2]]]);
+});
+
+it('roundtrips an inline value containing a quote and a brace', function () {
+    // Regression (Bug F): a `{` inside a later inline value was mistaken for a
+    // field-list opener, so `a[2]: "-x\"{",y` decoded to a string-keyed object.
+    expect(roundtrip(['a' => ['-x"{', 'y']]))->toBe(['a' => ['-x"{', 'y']]);
+    expect(roundtrip(['_' => [982, [0.3, null, '-x"{']]]))->toBe(['_' => [982, [0.3, null, '-x"{']]]);
+});
+
+it('roundtrips a tabular field name containing a closing brace', function () {
+    // Regression: the field-list terminator was found with strpos, so a quoted
+    // field name containing `}` truncated the header. Now scanned quote-aware.
+    expect(roundtrip(['items' => [['a}b' => 1, 'c' => 2]]]))
+        ->toBe(['items' => [['a}b' => 1, 'c' => 2]]]);
+});
+
+it('expands a folded dotted key nested inside a list item', function () {
+    // Regression (Bug H): Auto path-expansion skipped dotted keys living inside
+    // list-item objects, so key folding was not symmetric there.
+    $data = ['items' => [['a' => ['b' => 1]]]];
+    $folded = new EncoderOptions(keyFolding: KeyFolding::Safe);
+
+    expect(roundtrip($data, $folded))->toBe($data);
 });

@@ -136,15 +136,16 @@ class ValueDecoder
 
     private static function tryParseNumber(string $token): int|float|false
     {
-        if (preg_match('/^0\d+$/', $token)) {
+        if (preg_match('/^0\d+$/D', $token)) {
             return false;
         }
 
-        if (preg_match('/^-0\d+$/', $token)) {
+        if (preg_match('/^-0\d+$/D', $token)) {
             return false;
         }
 
-        if (! preg_match('/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/', $token)) {
+        // /D anchors the end so a trailing newline cannot pass as a valid number.
+        if (! preg_match('/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/D', $token)) {
             return false;
         }
 

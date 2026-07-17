@@ -90,9 +90,10 @@ it('decodes a single primitive at root', function () {
 });
 
 it('decodes empty document as empty object', function () {
+    // Spec §5: an empty document decodes to an empty object, not an empty array.
     $decoder = new ToonDecoder;
 
-    expect($decoder->decode(''))->toBe([]);
+    expect($decoder->decode(''))->toEqual(new stdClass);
 });
 
 it('decodes quoted strings', function () {
@@ -319,11 +320,12 @@ it('applies LWW for duplicate keys in non-strict mode', function () {
 });
 
 it('decodes empty list item objects', function () {
+    // Spec §10: a bare dash is an empty-object list item.
     $decoder = new ToonDecoder;
 
     $result = $decoder->decode("items[2]:\n  -\n  -");
 
-    expect($result)->toBe(['items' => [[], []]]);
+    expect($result)->toEqual(['items' => [new stdClass, new stdClass]]);
 });
 
 it('decodes surrogate pair escapes into astral codepoints', function () {
