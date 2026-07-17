@@ -156,7 +156,7 @@ class ToonEncoder
     private function encodeTabularArray(array $items, int $depth, ?string $key, array $fields, string $delimSymbol): string
     {
         $count = count($items);
-        $encodedFields = array_map(fn (string $f) => ValueEncoder::encodeKey($f), $fields);
+        $encodedFields = array_map(fn (string $f) => $this->encodeKeyStr($f), $fields);
         $fieldList = implode($this->documentDelimiter->value, $encodedFields);
         $header = '['.$count.$delimSymbol.']{'.$fieldList.'}:';
 
@@ -202,7 +202,7 @@ class ToonEncoder
             }
 
             $values = implode($this->documentDelimiter->value, $encoded);
-            $lines[] = $this->prefix($depth + 1).'- ['.$innerCount.$delimSymbol.']: '.$values;
+            $lines[] = $this->prefix($depth + 1).'- ['.$innerCount.$delimSymbol.']:'.($values === '' ? '' : ' '.$values);
         }
 
         return implode("\n", $lines);
@@ -245,7 +245,7 @@ class ToonEncoder
 
                 $values = implode($this->documentDelimiter->value, $encoded);
 
-                return $this->prefix($depth).'- ['.$count.$delimSymbol.']: '.$values;
+                return $this->prefix($depth).'- ['.$count.$delimSymbol.']:'.($values === '' ? '' : ' '.$values);
             }
 
             $count = count($item);
@@ -291,8 +291,13 @@ class ToonEncoder
 
             if ($isFirst) {
                 $isFirst = false;
-                $inner = $this->encodeValue($v, 0, $k);
-                $lines[] = $this->prefix($depth).'- '.$inner;
+
+                // Encode the first key at $depth + 1 so any continuation lines
+                // (nested objects or lists) land where the decoder expects them
+                // ($depth + 2), then splice the "- " marker into the first line.
+                $innerLines = explode("\n", $this->encodeValue($v, $depth + 1, $k));
+                $innerLines[0] = $this->prefix($depth).'- '.ltrim($innerLines[0]);
+                $lines[] = implode("\n", $innerLines);
             } else {
                 $lines[] = $this->encodeValue($v, $depth + 1, $k);
             }
@@ -305,7 +310,7 @@ class ToonEncoder
     {
         $count = count($firstValue);
         $delimSymbol = $this->documentDelimiter->headerSymbol();
-        $encodedFields = array_map(fn (string $f) => ValueEncoder::encodeKey($f), $tabularFields);
+        $encodedFields = array_map(fn (string $f) => $this->encodeKeyStr($f), $tabularFields);
         $fieldList = implode($this->documentDelimiter->value, $encodedFields);
         $header = '['.$count.$delimSymbol.']{'.$fieldList.'}:';
 
@@ -468,8 +473,16 @@ class ToonEncoder
         return str_repeat(' ', $depth * $this->indent);
     }
 
+    /**
+     * Encode an object key, emitting KeyFolder-produced dotted paths unquoted
+     * while quoting everything else that needs it (including literal dotted keys).
+     */
     private function encodeKeyStr(string $key): string
     {
+        if ($this->options->keyFolding === KeyFolding::Safe && str_starts_with($key, KeyFolder::FOLDED_KEY_MARKER)) {
+            return substr($key, strlen(KeyFolder::FOLDED_KEY_MARKER));
+        }
+
         return ValueEncoder::encodeKey($key);
     }
 }

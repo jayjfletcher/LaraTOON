@@ -43,3 +43,17 @@ it('removes trailing zeros from fractional part', function () {
     expect(NumberEncoder::encode(1.50))->toBe('1.5');
     expect(NumberEncoder::encode(2.0))->toBe('2');
 });
+
+it('preserves full float precision', function () {
+    expect(NumberEncoder::encode(1.0000000000000002))->toBe('1.0000000000000002');
+    expect(NumberEncoder::encode(0.30000000000000004))->toBe('0.30000000000000004');
+    expect(NumberEncoder::encode(-1.0000000000000002))->toBe('-1.0000000000000002');
+});
+
+it('roundtrips 17 significant digit floats through string form', function () {
+    $values = [1.0000000000000002, 0.1 + 0.2, 1.7976931348623157e308, 2.2250738585072014e-308];
+
+    foreach ($values as $value) {
+        expect((float) NumberEncoder::encode($value))->toBe($value);
+    }
+});

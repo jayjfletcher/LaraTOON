@@ -149,10 +149,18 @@ class HeaderParser
         $raw = trim($raw);
 
         if (ValueDecoder::isQuoted($raw)) {
-            return ValueDecoder::decodeQuoted($raw, $lineNumber);
+            return self::markLiteralKey(ValueDecoder::decodeQuoted($raw, $lineNumber));
         }
 
         return $raw;
+    }
+
+    /**
+     * Mark a quoted dotted key as literal so path expansion leaves it untouched.
+     */
+    private static function markLiteralKey(string $key): string
+    {
+        return str_contains($key, '.') ? PathExpander::LITERAL_KEY_MARKER.$key : $key;
     }
 
     /**
@@ -225,7 +233,7 @@ class HeaderParser
             $field = trim($field);
 
             if (ValueDecoder::isQuoted($field)) {
-                return ValueDecoder::decodeQuoted($field, $lineNumber);
+                return self::markLiteralKey(ValueDecoder::decodeQuoted($field, $lineNumber));
             }
 
             return $field;

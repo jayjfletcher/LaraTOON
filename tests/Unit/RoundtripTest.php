@@ -6,6 +6,7 @@ use Jayi\Toon\Encoding\EncoderOptions;
 use Jayi\Toon\Encoding\ToonEncoder;
 use Jayi\Toon\Enums\KeyFolding;
 use Jayi\Toon\Enums\PathExpansion;
+use Jayi\Toon\Toon;
 
 function roundtrip(mixed $data, ?EncoderOptions $encOpts = null, ?DecoderOptions $decOpts = null): mixed
 {
@@ -159,4 +160,74 @@ it('roundtrips quoted keys', function () {
     ];
 
     expect(roundtrip($data))->toBe($data);
+});
+
+it('roundtrips a list item whose first key holds a nested object', function () {
+    $data = ['list' => [['k' => ['sub' => 1], 'x' => 2]]];
+
+    expect(roundtrip($data))->toBe($data);
+});
+
+it('roundtrips a list item whose first key holds a nested list', function () {
+    $data = ['list' => [['k' => [['a' => 1], 'scalar'], 'x' => 2]]];
+
+    expect(roundtrip($data))->toBe($data);
+});
+
+it('roundtrips a list item with multiple keys after a nested first value', function () {
+    $data = [
+        'list' => [
+            ['k' => ['sub' => ['deep' => 1]], 'x' => 2, 'y' => 'three'],
+            ['k' => ['sub' => ['deep' => 4]], 'x' => 5, 'y' => 'six'],
+        ],
+    ];
+
+    expect(roundtrip($data))->toBe($data);
+});
+
+it('roundtrips literal dotted keys without path expansion', function () {
+    $data = ['a.b' => 1];
+
+    expect(roundtrip($data))->toBe($data);
+});
+
+it('roundtrips literal dotted keys alongside real nesting', function () {
+    $data = ['a' => ['b' => 1], 'a.b' => 2];
+
+    expect(roundtrip($data))->toBe($data);
+});
+
+it('roundtrips CRLF line endings', function () {
+    $decoder = new ToonDecoder;
+
+    $result = $decoder->decode("a: 1\r\nb:\r\n  c: 2\r\n");
+
+    expect($result)->toBe(['a' => 1, 'b' => ['c' => 2]]);
+});
+
+it('roundtrips an empty inner array in strict mode', function () {
+    $data = ['x' => [[]]];
+
+    expect(roundtrip($data))->toBe($data);
+});
+
+it('roundtrips high-precision floats', function () {
+    $data = [
+        'a' => 1.0000000000000002,
+        'b' => 0.30000000000000004,
+        'c' => -2.2250738585072014e-308,
+    ];
+
+    expect(roundtrip($data))->toBe($data);
+});
+
+it('roundtrips a root scalar containing a colon', function () {
+    expect(roundtrip('note: hello'))->toBe('note: hello');
+});
+
+it('decodes an empty string to an empty array', function () {
+    // A root-level empty object encodes to '' and decodes back as [] —
+    // root empty objects are not distinguishable from empty arrays.
+    expect(Toon::encode(new stdClass))->toBe('');
+    expect(Toon::decode(''))->toBe([]);
 });

@@ -35,7 +35,25 @@ class ToonDecoder
 
         $result = $this->decodeRoot();
 
+        if ($this->options->strict) {
+            $this->assertAllLinesConsumed();
+        }
+
         return $this->applyExpansion($result);
+    }
+
+    /**
+     * Ensure no non-blank lines remain after the document root has been decoded.
+     */
+    private function assertAllLinesConsumed(): void
+    {
+        for ($i = $this->pos; $i < count($this->lines); $i++) {
+            $line = $this->lines[$i];
+
+            if (! $line['blank']) {
+                throw new ToonStrictModeException('Unexpected content after end of document', $line['num']);
+            }
+        }
     }
 
     /**
@@ -43,6 +61,7 @@ class ToonDecoder
      */
     private function parseLines(string $input): array
     {
+        $input = str_replace("\r\n", "\n", $input);
         $input = rtrim($input, "\n");
 
         if ($input === '') {
@@ -130,16 +149,20 @@ class ToonDecoder
         }
 
         if ($firstText === '[]' && count(array_values($nonBlank)) === 1) {
+            $this->pos = count($this->lines);
+
             return [];
         }
 
-        if (str_contains($firstText, ':')) {
+        if ($this->findUnquotedColon($firstText) !== false) {
             return $this->decodeObject(0);
         }
 
         $nonBlankList = array_values($nonBlank);
 
         if (count($nonBlankList) === 1) {
+            $this->pos = count($this->lines);
+
             return ValueDecoder::decode($firstText, $first['num']);
         }
 
@@ -165,7 +188,10 @@ class ToonDecoder
     private function decodeRootArray(array $header): array
     {
         if ($header['inline'] !== null) {
-            return $this->decodeInlineValues($header['inline'], $header['delimiter'], $header['fields'], $header['length'], $this->lines[$this->pos]['num']);
+            $result = $this->decodeInlineValues($header['inline'], $header['delimiter'], $header['fields'], $header['length'], $this->lines[$this->pos]['num']);
+            $this->pos++;
+
+            return $result;
         }
 
         $this->pos++;
@@ -204,6 +230,10 @@ class ToonDecoder
             $header = HeaderParser::parse($text, $lineNum, $this->options->strict);
 
             if ($header !== null && $header['key'] !== null) {
+                if ($this->options->strict && array_key_exists($header['key'], $result)) {
+                    throw new ToonStrictModeException("Duplicate key '{$header['key']}'", $lineNum);
+                }
+
                 $this->pos++;
                 $result[$header['key']] = $this->decodeArrayValue($header, $depth);
 
@@ -225,11 +255,13 @@ class ToonDecoder
             $rawKey = trim(substr($text, 0, $colonPos));
             $afterColon = substr($text, $colonPos + 1);
 
-            $key = ValueDecoder::isQuoted($rawKey)
-                ? ValueDecoder::decodeQuoted($rawKey, $lineNum)
-                : $rawKey;
+            $key = $this->decodeKey($rawKey, $lineNum);
 
-            if ($afterColon === '') {
+            if ($this->options->strict && array_key_exists($key, $result)) {
+                throw new ToonStrictModeException("Duplicate key '$key'", $lineNum);
+            }
+
+            if (trim($afterColon) === '') {
                 $this->pos++;
                 $nextDepthLines = $this->peekNextDepthLines($depth + 1);
 
@@ -243,17 +275,6 @@ class ToonDecoder
             }
 
             $value = ltrim($afterColon);
-
-            if ($this->options->strict && array_key_exists($key, $result)) {
-                throw new ToonStrictModeException("Duplicate key '$key'", $lineNum);
-            }
-
-            if ($value === '') {
-                $this->pos++;
-                $result[$key] = new \stdClass;
-
-                continue;
-            }
 
             if ($value === '[]') {
                 $this->pos++;
@@ -360,7 +381,7 @@ class ToonDecoder
         }
 
         if ($this->options->strict && count($rows) !== $expectedCount) {
-            throw new ToonStrictModeException("Expected $expectedCount tabular rows, but got ".count($rows));
+            throw new ToonStrictModeException("Expected $expectedCount tabular rows, but got ".count($rows), $firstRowLine ?? $this->currentLineNumber());
         }
 
         return $rows;
@@ -412,7 +433,7 @@ class ToonDecoder
         }
 
         if ($this->options->strict && count($items) !== $expectedCount) {
-            throw new ToonStrictModeException("Expected $expectedCount list items, but got ".count($items));
+            throw new ToonStrictModeException("Expected $expectedCount list items, but got ".count($items), $firstItemLine ?? $this->currentLineNumber());
         }
 
         return $items;
@@ -442,10 +463,10 @@ class ToonDecoder
             $this->pos++;
             $obj = [];
 
-            if ($header['fields'] !== null) {
+            if ($header['fields'] !== null && $header['inline'] === null) {
                 $obj[$header['key']] = $this->decodeTabularRows($header['fields'], $header['delimiter'], $header['length'], $depth + 2);
             } elseif ($header['inline'] !== null) {
-                $obj[$header['key']] = $this->decodeInlineValues($header['inline'], $header['delimiter'], null, $header['length'], $lineNum);
+                $obj[$header['key']] = $this->decodeInlineValues($header['inline'], $header['delimiter'], $header['fields'], $header['length'], $lineNum);
             } else {
                 $obj[$header['key']] = $this->decodeListItems($header['length'], $depth + 2);
             }
@@ -463,9 +484,7 @@ class ToonDecoder
             $rawKey = trim(substr($content, 0, $colonPos));
             $afterColon = substr($content, $colonPos + 1);
 
-            $key = ValueDecoder::isQuoted($rawKey)
-                ? ValueDecoder::decodeQuoted($rawKey, $lineNum)
-                : $rawKey;
+            $key = $this->decodeKey($rawKey, $lineNum);
 
             $value = ltrim($afterColon);
 
@@ -527,11 +546,9 @@ class ToonDecoder
             $rawKey = trim(substr($text, 0, $colonPos));
             $afterColon = substr($text, $colonPos + 1);
 
-            $key = ValueDecoder::isQuoted($rawKey)
-                ? ValueDecoder::decodeQuoted($rawKey, $lineNum)
-                : $rawKey;
+            $key = $this->decodeKey($rawKey, $lineNum);
 
-            if ($afterColon === '' || trim($afterColon) === '') {
+            if (trim($afterColon) === '') {
                 $this->pos++;
                 $nextDepthLines = $this->peekNextDepthLines($depth + 1);
 
@@ -563,6 +580,36 @@ class ToonDecoder
         }
 
         return $colonPos < $delimPos;
+    }
+
+    /**
+     * Decode an object key token, marking quoted dotted keys as literal so
+     * path expansion never splits them into nested paths.
+     */
+    private function decodeKey(string $rawKey, int $lineNum): string
+    {
+        if (! ValueDecoder::isQuoted($rawKey)) {
+            return $rawKey;
+        }
+
+        $key = ValueDecoder::decodeQuoted($rawKey, $lineNum);
+
+        return str_contains($key, '.') ? PathExpander::LITERAL_KEY_MARKER.$key : $key;
+    }
+
+    /**
+     * Line number at the current parse position, or of the last line when
+     * the position is already past the end of the document.
+     */
+    private function currentLineNumber(): ?int
+    {
+        if (isset($this->lines[$this->pos])) {
+            return $this->lines[$this->pos]['num'];
+        }
+
+        $last = end($this->lines);
+
+        return $last === false ? null : $last['num'];
     }
 
     private function findUnquotedColon(string $text): int|false
@@ -629,16 +676,45 @@ class ToonDecoder
         $mode = $this->options->expandPaths;
 
         if ($mode === PathExpansion::Off) {
-            return $result;
+            return $this->stripLiteralKeyMarkers($result);
         }
 
         if ($mode === PathExpansion::Auto && ! $this->hasDottedKeys($result)) {
-            return $result;
+            return $this->stripLiteralKeyMarkers($result);
         }
 
         $expander = new PathExpander($this->options->strict);
 
         return $expander->expand($result);
+    }
+
+    /**
+     * Remove literal-key markers from quoted dotted keys when no path
+     * expansion runs (the expander strips them itself).
+     */
+    private function stripLiteralKeyMarkers(mixed $data): mixed
+    {
+        if (! is_array($data)) {
+            return $data;
+        }
+
+        if (array_is_list($data)) {
+            return array_map(fn (mixed $v) => $this->stripLiteralKeyMarkers($v), $data);
+        }
+
+        $result = [];
+
+        foreach ($data as $key => $value) {
+            $key = (string) $key;
+
+            if (str_starts_with($key, PathExpander::LITERAL_KEY_MARKER)) {
+                $key = substr($key, strlen(PathExpander::LITERAL_KEY_MARKER));
+            }
+
+            $result[$key] = $this->stripLiteralKeyMarkers($value);
+        }
+
+        return $result;
     }
 
     private function hasDottedKeys(mixed $data): bool

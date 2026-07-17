@@ -79,11 +79,15 @@ it('does not quote unicode and emoji', function () {
 it('encodes keys that match identifier pattern as unquoted', function () {
     expect(ValueEncoder::encodeKey('name'))->toBe('name');
     expect(ValueEncoder::encodeKey('user_id'))->toBe('user_id');
-    expect(ValueEncoder::encodeKey('data.meta'))->toBe('data.meta');
 });
 
 it('quotes keys that do not match identifier pattern', function () {
     expect(ValueEncoder::encodeKey('my-key'))->toBe('"my-key"');
     expect(ValueEncoder::encodeKey('has space'))->toBe('"has space"');
     expect(ValueEncoder::encodeKey(''))->toBe('""');
+});
+
+it('quotes literal dotted keys so they are not mistaken for folded paths', function () {
+    expect(ValueEncoder::encodeKey('data.meta'))->toBe('"data.meta"');
+    expect(ValueEncoder::encodeKey('a.b'))->toBe('"a.b"');
 });

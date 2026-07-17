@@ -2,6 +2,7 @@
 
 namespace Jayi\Toon\Overrides\Laravel\Pao;
 
+use Illuminate\Container\Container;
 use Laravel\Pao\Execution;
 use Pest\Contracts\Plugins\AddsOutput;
 
@@ -29,7 +30,7 @@ final class Plugin implements AddsOutput
             return $exitCode;
         }
 
-        if (! filter_var(getenv('TOON_PAO_OUTPUT') ?: ($_ENV['TOON_PAO_OUTPUT'] ?? 'false'), FILTER_VALIDATE_BOOLEAN)) {
+        if (! $this->outputEnabled()) {
             return $exitCode;
         }
 
@@ -40,5 +41,27 @@ final class Plugin implements AddsOutput
         stream_filter_append(STDOUT, 'toon_output', STREAM_FILTER_WRITE);
 
         return $exitCode;
+    }
+
+    /**
+     * Whether TOON output is enabled, preferring the `toon.pao_output` config
+     * inside Laravel and falling back to the TOON_PAO_OUTPUT env variable.
+     */
+    public function outputEnabled(): bool
+    {
+        if (class_exists(Container::class)) {
+            $container = Container::getInstance();
+
+            if ($container->bound('config')) {
+                return filter_var($container->make('config')->get('toon.pao_output', $this->envFlag()), FILTER_VALIDATE_BOOLEAN);
+            }
+        }
+
+        return $this->envFlag();
+    }
+
+    private function envFlag(): bool
+    {
+        return filter_var(getenv('TOON_PAO_OUTPUT') ?: ($_ENV['TOON_PAO_OUTPUT'] ?? 'false'), FILTER_VALIDATE_BOOLEAN);
     }
 }

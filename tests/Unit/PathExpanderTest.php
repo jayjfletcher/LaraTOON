@@ -56,11 +56,10 @@ it('deep merges nested objects at same path', function () {
     $result = $expander->expand([
         'a.b' => ['x' => 1],
         'a.c' => 2,
-        'a.b' => ['y' => 3],
+        'a.b.y' => 3,
     ]);
 
-    // Last key wins for 'a.b' since PHP arrays can't have duplicate keys
-    expect($result)->toBe(['a' => ['b' => ['y' => 3], 'c' => 2]]);
+    expect($result)->toBe(['a' => ['b' => ['x' => 1, 'y' => 3], 'c' => 2]]);
 });
 
 it('throws on path conflict in strict mode', function () {

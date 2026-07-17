@@ -13,6 +13,12 @@ use Jayi\Toon\Exceptions\ToonStrictModeException;
  */
 class PathExpander
 {
+    /**
+     * Prefix marking keys that were quoted in the source document and must
+     * be treated as literal keys, never expanded into nested paths.
+     */
+    public const string LITERAL_KEY_MARKER = "\0";
+
     private const string IDENTIFIER_PATTERN = '/^[A-Za-z_][A-Za-z0-9_]*$/';
 
     public function __construct(
@@ -34,6 +40,12 @@ class PathExpander
         foreach ($data as $key => $value) {
             $key = (string) $key;
             $value = $this->expand($value);
+
+            if (str_starts_with($key, self::LITERAL_KEY_MARKER)) {
+                $this->setValue($expanded, [substr($key, strlen(self::LITERAL_KEY_MARKER))], $value);
+
+                continue;
+            }
 
             if (! str_contains($key, '.')) {
                 $this->setValue($expanded, [$key], $value);

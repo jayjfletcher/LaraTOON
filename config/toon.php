@@ -1,12 +1,37 @@
 <?php
 
 return [
+    /*
+    |--------------------------------------------------------------------------
+    | Encoder Defaults
+    |--------------------------------------------------------------------------
+    |
+    | Defaults used by Toon::encode() when no EncoderOptions are passed.
+    | Explicit options given by the caller always take precedence.
+    |
+    | delimiter: "comma", "tab", or "pipe".
+    | key_folding: "off" or "safe".
+    | flatten_depth: maximum folded segments, INF for unlimited.
+    |
+    */
     'indent_size' => 2,
     'delimiter' => 'comma',
     'key_folding' => 'off',
     'flatten_depth' => INF,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Decoder Defaults
+    |--------------------------------------------------------------------------
+    |
+    | Defaults used by Toon::decode() when no DecoderOptions are passed.
+    | Explicit options given by the caller always take precedence.
+    |
+    | expand_paths: "off", "safe", or "auto".
+    |
+    */
     'strict' => true,
-    'expand_paths' => 'off',
+    'expand_paths' => 'auto',
 
     /*
     |--------------------------------------------------------------------------

@@ -325,3 +325,134 @@ it('decodes empty list item objects', function () {
 
     expect($result)->toBe(['items' => [[], []]]);
 });
+
+it('decodes surrogate pair escapes into astral codepoints', function () {
+    $decoder = new ToonDecoder;
+
+    $result = $decoder->decode('s: "😀"');
+
+    expect($result)->toBe(['s' => '😀']);
+});
+
+it('throws on a lone high surrogate escape', function () {
+    $decoder = new ToonDecoder;
+
+    $decoder->decode('s: "\uD800"');
+})->throws(ToonDecodeException::class, 'lone surrogate');
+
+it('throws on a lone low surrogate escape', function () {
+    $decoder = new ToonDecoder;
+
+    $decoder->decode('s: "\uDC00"');
+})->throws(ToonDecodeException::class, 'lone surrogate');
+
+it('throws on a high surrogate followed by a non-surrogate escape', function () {
+    $decoder = new ToonDecoder;
+
+    $decoder->decode('s: "\uD83DA"');
+})->throws(ToonDecodeException::class, 'lone surrogate');
+
+it('decodes nested children after trailing whitespace on a key line in lenient mode', function () {
+    $decoder = new ToonDecoder(new DecoderOptions(strict: false));
+
+    $result = $decoder->decode("parent: \n  child: 1");
+
+    expect($result)->toBe(['parent' => ['child' => 1]]);
+});
+
+it('decodes a quoted root scalar containing a colon', function () {
+    $decoder = new ToonDecoder;
+
+    $result = $decoder->decode('"note: hello"');
+
+    expect($result)->toBe('note: hello');
+});
+
+it('throws on unconsumed lines after the document root in strict mode', function () {
+    $decoder = new ToonDecoder(new DecoderOptions(strict: true));
+
+    $caught = null;
+
+    try {
+        $decoder->decode("a: 1\n    b: 2");
+    } catch (ToonStrictModeException $e) {
+        $caught = $e;
+    }
+
+    expect($caught)->toBeInstanceOf(ToonStrictModeException::class)
+        ->and($caught->toonLine)->toBe(2);
+});
+
+it('ignores unconsumed lines after the document root in lenient mode', function () {
+    $decoder = new ToonDecoder(new DecoderOptions(strict: false));
+
+    $result = $decoder->decode("a: 1\n    b: 2");
+
+    expect($result)->toBe(['a' => 1]);
+});
+
+it('throws on duplicate nested object keys in strict mode', function () {
+    $decoder = new ToonDecoder(new DecoderOptions(strict: true));
+
+    $decoder->decode("a:\n  b: 1\na:\n  c: 2");
+})->throws(ToonStrictModeException::class, "Duplicate key 'a'");
+
+it('throws on duplicate array header keys in strict mode', function () {
+    $decoder = new ToonDecoder(new DecoderOptions(strict: true));
+
+    $decoder->decode("a[2]: 1,2\na[1]: 3");
+})->throws(ToonStrictModeException::class, "Duplicate key 'a'");
+
+it('includes a line number in tabular row count mismatch errors', function () {
+    $decoder = new ToonDecoder(new DecoderOptions(strict: true));
+
+    $caught = null;
+
+    try {
+        $decoder->decode("t[2]{a,b}:\n  1,2");
+    } catch (ToonStrictModeException $e) {
+        $caught = $e;
+    }
+
+    expect($caught)->toBeInstanceOf(ToonStrictModeException::class)
+        ->and($caught->toonLine)->toBe(2);
+});
+
+it('includes a line number in list item count mismatch errors', function () {
+    $decoder = new ToonDecoder(new DecoderOptions(strict: true));
+
+    $caught = null;
+
+    try {
+        $decoder->decode("x[3]:\n  - 1\n  - 2");
+    } catch (ToonStrictModeException $e) {
+        $caught = $e;
+    }
+
+    expect($caught)->toBeInstanceOf(ToonStrictModeException::class)
+        ->and($caught->toonLine)->toBe(2);
+});
+
+it('decodes a keyed inline tabular header as a list item', function () {
+    $decoder = new ToonDecoder;
+
+    $result = $decoder->decode("items[1]:\n  - k[2]{a,b}: 1,2");
+
+    expect($result)->toBe(['items' => [['k' => [['a' => 1, 'b' => 2]]]]]);
+});
+
+it('does not path-expand quoted dotted keys', function () {
+    $decoder = new ToonDecoder(new DecoderOptions(expandPaths: PathExpansion::Safe));
+
+    $result = $decoder->decode('"a.b": 1');
+
+    expect($result)->toBe(['a.b' => 1]);
+});
+
+it('expands unquoted dotted keys while keeping quoted ones literal', function () {
+    $decoder = new ToonDecoder(new DecoderOptions(expandPaths: PathExpansion::Safe));
+
+    $result = $decoder->decode("a.b: 1\n\"c.d\": 2");
+
+    expect($result)->toBe(['a' => ['b' => 1], 'c.d' => 2]);
+});

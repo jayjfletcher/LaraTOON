@@ -10,6 +10,12 @@ namespace Jayi\Toon\Encoding;
  */
 class KeyFolder
 {
+    /**
+     * Prefix marking keys produced by folding, so the encoder can emit them
+     * unquoted while literal dotted keys from the input data stay quoted.
+     */
+    public const string FOLDED_KEY_MARKER = "\0";
+
     private const IDENTIFIER_PATTERN = '/^[A-Za-z_][A-Za-z0-9_]*$/';
 
     public function __construct(
@@ -26,6 +32,12 @@ class KeyFolder
             return $data;
         }
 
+        $inputKeys = [];
+
+        foreach (array_keys($data) as $inputKey) {
+            $inputKeys[(string) $inputKey] = true;
+        }
+
         $result = [];
 
         foreach ($data as $key => $value) {
@@ -35,10 +47,10 @@ class KeyFolder
             if (count($chain['segments']) > 1) {
                 $depth = (int) min(count($chain['segments']), $this->flattenDepth);
 
-                if ($depth >= 2 && $this->canFold($chain['segments'], $depth, $result)) {
+                if ($depth >= 2 && $this->canFold($chain['segments'], $depth, $result, $inputKeys)) {
                     $foldedKey = implode('.', array_slice($chain['segments'], 0, $depth));
                     $remaining = $this->buildRemainder(array_slice($chain['segments'], $depth), $chain['leaf']);
-                    $result[$foldedKey] = $this->fold($remaining);
+                    $result[self::FOLDED_KEY_MARKER.$foldedKey] = $this->fold($remaining);
 
                     continue;
                 }
@@ -69,22 +81,23 @@ class KeyFolder
     /**
      * @param  string[]  $segments
      * @param  array<string, mixed>  $existingSiblings
+     * @param  array<string, true>  $inputKeys
      */
-    private function canFold(array $segments, int $depth, array $existingSiblings): bool
+    private function canFold(array $segments, int $depth, array $existingSiblings, array $inputKeys): bool
     {
         for ($i = 0; $i < $depth; $i++) {
             if (! preg_match(self::IDENTIFIER_PATTERN, $segments[$i])) {
-                return false;
-            }
-
-            if (str_contains($segments[$i], '.')) {
                 return false;
             }
         }
 
         $foldedKey = implode('.', array_slice($segments, 0, $depth));
 
-        if (array_key_exists($foldedKey, $existingSiblings)) {
+        if (isset($inputKeys[$foldedKey])) {
+            return false;
+        }
+
+        if (array_key_exists($foldedKey, $existingSiblings) || array_key_exists(self::FOLDED_KEY_MARKER.$foldedKey, $existingSiblings)) {
             return false;
         }
 

@@ -43,10 +43,13 @@ class ValueEncoder
 
     /**
      * Encode an object key, quoting only when it doesn't match the identifier pattern.
+     *
+     * Literal dotted keys are quoted so decoders never mistake them for
+     * folded key paths; only KeyFolder-produced paths are emitted unquoted.
      */
     public static function encodeKey(string $key): string
     {
-        if (preg_match('/^[A-Za-z_][A-Za-z0-9_.]*$/', $key)) {
+        if (preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $key)) {
             return $key;
         }
 

@@ -76,8 +76,13 @@ class ValueDecoder
                         throw new ToonDecodeException('Invalid escape sequence: \\u requires 4 hex digits', $line);
                     }
                     $codepoint = hexdec($hex);
-                    if ($codepoint >= 0xD800 && $codepoint <= 0xDFFF) {
+                    if ($codepoint >= 0xDC00 && $codepoint <= 0xDFFF) {
                         throw new ToonDecodeException('Invalid escape sequence: lone surrogate \\u'.strtoupper($hex), $line);
+                    }
+                    if ($codepoint >= 0xD800 && $codepoint <= 0xDBFF) {
+                        $low = self::parseLowSurrogate($inner, $i + 6, $hex, $line);
+                        $codepoint = 0x10000 + (($codepoint - 0xD800) << 10) + ($low - 0xDC00);
+                        $i += 6;
                     }
                     $result .= mb_chr($codepoint, 'UTF-8');
                     $i += 5;
@@ -100,6 +105,33 @@ class ValueDecoder
         }
 
         return $result;
+    }
+
+    /**
+     * Parse the low half of a UTF-16 surrogate pair starting at $offset.
+     *
+     * Throws when the high surrogate is not followed by a valid
+     * `\uDC00`-`\uDFFF` escape, since that leaves it a lone surrogate.
+     */
+    private static function parseLowSurrogate(string $inner, int $offset, string $highHex, ?int $line): int
+    {
+        if (substr($inner, $offset, 2) !== '\\u') {
+            throw new ToonDecodeException('Invalid escape sequence: lone surrogate \\u'.strtoupper($highHex), $line);
+        }
+
+        $hex = substr($inner, $offset + 2, 4);
+
+        if (! preg_match('/^[0-9A-Fa-f]{4}$/', $hex)) {
+            throw new ToonDecodeException('Invalid escape sequence: lone surrogate \\u'.strtoupper($highHex), $line);
+        }
+
+        $codepoint = hexdec($hex);
+
+        if ($codepoint < 0xDC00 || $codepoint > 0xDFFF) {
+            throw new ToonDecodeException('Invalid escape sequence: lone surrogate \\u'.strtoupper($highHex), $line);
+        }
+
+        return $codepoint;
     }
 
     private static function tryParseNumber(string $token): int|float|false

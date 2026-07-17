@@ -323,3 +323,43 @@ it('preserves object key order', function () {
 
     expect($result)->toBe("z: 1\na: 2\nm: 3");
 });
+
+it('skips folding when the folded key collides with a literal input key', function () {
+    $encoder = new ToonEncoder(new EncoderOptions(keyFolding: KeyFolding::Safe));
+
+    $result = $encoder->encode(['a' => ['b' => 1], 'a.b' => 2]);
+
+    expect($result)->toBe("a:\n  b: 1\n\"a.b\": 2");
+});
+
+it('skips folding when the literal key comes before the foldable chain', function () {
+    $encoder = new ToonEncoder(new EncoderOptions(keyFolding: KeyFolding::Safe));
+
+    $result = $encoder->encode(['a.b' => 2, 'a' => ['b' => 1]]);
+
+    expect($result)->toBe("\"a.b\": 2\na:\n  b: 1");
+});
+
+it('encodes empty inner arrays without a trailing space', function () {
+    $encoder = new ToonEncoder;
+
+    $result = $encoder->encode(['x' => [[]]]);
+
+    expect($result)->toBe("x[1]:\n  - [0]:");
+});
+
+it('encodes empty and non-empty inner arrays together', function () {
+    $encoder = new ToonEncoder;
+
+    $result = $encoder->encode(['x' => [[], [1]]]);
+
+    expect($result)->toBe("x[2]:\n  - [0]:\n  - [1]: 1");
+});
+
+it('quotes literal dotted keys when key folding is enabled', function () {
+    $encoder = new ToonEncoder(new EncoderOptions(keyFolding: KeyFolding::Safe));
+
+    $result = $encoder->encode(['a.b' => 1]);
+
+    expect($result)->toBe('"a.b": 1');
+});

@@ -43,7 +43,7 @@ class NumberEncoder
             return $sign.self::formatExponent($abs);
         }
 
-        $formatted = sprintf('%.14g', $abs);
+        $formatted = self::shortestRoundtrip($abs);
 
         if (str_contains($formatted, 'E') || str_contains($formatted, 'e')) {
             return $sign.self::expandScientific($formatted);
@@ -54,6 +54,23 @@ class NumberEncoder
         }
 
         return $sign.$formatted;
+    }
+
+    /**
+     * Format a float with the fewest significant digits that still parse back
+     * to the exact same value, preserving full IEEE-754 precision.
+     */
+    private static function shortestRoundtrip(float $abs): string
+    {
+        for ($precision = 1; $precision <= 17; $precision++) {
+            $candidate = sprintf('%.'.$precision.'g', $abs);
+
+            if ((float) $candidate === $abs) {
+                return $candidate;
+            }
+        }
+
+        return sprintf('%.17g', $abs);
     }
 
     private static function formatExponent(float $abs): string

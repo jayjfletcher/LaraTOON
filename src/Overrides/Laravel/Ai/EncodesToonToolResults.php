@@ -1,8 +1,7 @@
 <?php
 
-namespace Jayi\Toon\Overrides\Laravel\Mcp;
+namespace Jayi\Toon\Overrides\Laravel\Ai;
 
-use Jayi\Toon\Overrides\Laravel\Ai\ToonToolResponse;
 use Laravel\Ai\Tools\Request;
 
 /**
