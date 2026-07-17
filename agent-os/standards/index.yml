@@ -1,2 +1,42 @@
 # Agent OS Standards Index
 
+backend:
+  config-defaults:
+    description: Laravel config feeds default options only; caller-passed options always win
+  exception-hierarchy:
+    description: Single ToonException base; StrictMode under Decode; decode errors carry line number
+  framework-optional:
+    description: Core runs without Laravel; optional deps guarded by class_exists, not required
+  host-quirk-comments:
+    description: Document host-framework lifecycle quirks and failure mode inline so they aren't "fixed"
+  key-folding:
+    description: fold/expand are inverse ops — keep symmetric; \0 markers; strict conflicts throw
+  normalize-then-encode:
+    description: Encoder normalizes input to primitives in one pass before emitting
+  opt-in-flags:
+    description: Opt-in flags resolve config-first, env fallback, filter_var boolean-coerced
+  options-objects:
+    description: Config via readonly Options objects with named factory presets, not method params
+  option-enums:
+    description: String-backed option enums; backing value = config token; behavior methods on the enum
+  overrides-delegate:
+    description: Override classes adapt one host hook then delegate to Toon::encode/smart
+  overrides-layout:
+    description: Third-party integrations isolated under src/Overrides/<Ecosystem>/<Vendor>
+  spec-invariants:
+    description: Spec-cited quoting/number/escape rules and named marker constants
+  stateless-helpers:
+    description: Static stateless helpers vs stateful instance classes, config passed per-call
+  thin-facade:
+    description: Toon is a thin static API/facade target; logic lives in encoder/decoder instances
+  totoon-surface:
+    description: Uniform toToon(?EncoderOptions) surface across macros and HasToon, all delegate to encode
+testing:
+  named-datasets:
+    description: Dataset ->with() rows use descriptive string keys naming each edge case
+  pest-style:
+    description: Convention — it() over test()/describe, strict toBe() over toEqual()
+  roundtrip-contract:
+    description: decode(encode(x))===x is the primary check; add a roundtrip case per new type
+  unit-vs-feature:
+    description: Unit tests use raw classes without Laravel; Feature boots Testbench and provider
