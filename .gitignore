@@ -54,3 +54,4 @@ frankenphp-worker.php
 .DS_Store
 cghooks.lock
 *.code-workspace
+composer.lock
