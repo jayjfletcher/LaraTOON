@@ -1,9 +1,9 @@
 <?php
 
-namespace Jayi\Toon\Traits;
+namespace JayI\Toon\Traits;
 
-use Jayi\Toon\Encoding\EncoderOptions;
-use Jayi\Toon\Toon;
+use JayI\Toon\Encoding\EncoderOptions;
+use JayI\Toon\Toon;
 
 /**
  * Adds a `toToon()` method to Eloquent models or any class with `toArray()`.

@@ -1,12 +1,12 @@
 <?php
 
-use Jayi\Toon\Decoding\DecoderOptions;
-use Jayi\Toon\Decoding\ToonDecoder;
-use Jayi\Toon\Encoding\EncoderOptions;
-use Jayi\Toon\Encoding\ToonEncoder;
-use Jayi\Toon\Enums\KeyFolding;
-use Jayi\Toon\Enums\PathExpansion;
-use Jayi\Toon\Toon;
+use JayI\Toon\Decoding\DecoderOptions;
+use JayI\Toon\Decoding\ToonDecoder;
+use JayI\Toon\Encoding\EncoderOptions;
+use JayI\Toon\Encoding\ToonEncoder;
+use JayI\Toon\Enums\KeyFolding;
+use JayI\Toon\Enums\PathExpansion;
+use JayI\Toon\Toon;
 
 function roundtrip(mixed $data, ?EncoderOptions $encOpts = null, ?DecoderOptions $decOpts = null): mixed
 {

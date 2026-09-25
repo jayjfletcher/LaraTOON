@@ -1,6 +1,6 @@
 <?php
 
-namespace Jayi\Toon\Exceptions;
+namespace JayI\Toon\Exceptions;
 
 use RuntimeException;
 

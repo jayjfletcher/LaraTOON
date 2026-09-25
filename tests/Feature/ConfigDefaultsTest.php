@@ -1,9 +1,9 @@
 <?php
 
-use Jayi\Toon\Decoding\DecoderOptions;
-use Jayi\Toon\Encoding\EncoderOptions;
-use Jayi\Toon\Overrides\Laravel\Pao\Plugin;
-use Jayi\Toon\Toon;
+use JayI\Toon\Decoding\DecoderOptions;
+use JayI\Toon\Encoding\EncoderOptions;
+use JayI\Toon\Overrides\Laravel\Pao\Plugin;
+use JayI\Toon\Toon;
 
 it('uses the published config defaults for encoding', function () {
     expect(Toon::encode(['a' => ['b' => 1]]))->toBe("a:\n  b: 1");

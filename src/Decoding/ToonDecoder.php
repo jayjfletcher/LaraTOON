@@ -1,10 +1,10 @@
 <?php
 
-namespace Jayi\Toon\Decoding;
+namespace JayI\Toon\Decoding;
 
-use Jayi\Toon\Enums\Delimiter;
-use Jayi\Toon\Enums\PathExpansion;
-use Jayi\Toon\Exceptions\ToonStrictModeException;
+use JayI\Toon\Enums\Delimiter;
+use JayI\Toon\Enums\PathExpansion;
+use JayI\Toon\Exceptions\ToonStrictModeException;
 
 /**
  * Decodes TOON format strings into PHP data structures.

@@ -7,9 +7,9 @@ Toon decodes TOON-formatted strings back into PHP arrays with automatic detectio
 ### `Toon::decode($toon, $options)`
 
 ```php
-use Jayi\Toon\Toon;
-use Jayi\Toon\Decoding\DecoderOptions;
-use Jayi\Toon\Enums\PathExpansion;
+use JayI\Toon\Toon;
+use JayI\Toon\Decoding\DecoderOptions;
+use JayI\Toon\Enums\PathExpansion;
 
 // Auto-detect everything (default)
 $data = Toon::decode($toon);

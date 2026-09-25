@@ -1,8 +1,8 @@
 <?php
 
-namespace Jayi\Toon\Tests;
+namespace JayI\Toon\Tests;
 
-use Jayi\Toon\ToonServiceProvider;
+use JayI\Toon\ToonServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase

@@ -1,9 +1,9 @@
 <?php
 
-namespace Jayi\Toon\Encoding;
+namespace JayI\Toon\Encoding;
 
-use Jayi\Toon\Enums\Delimiter;
-use Jayi\Toon\Enums\KeyFolding;
+use JayI\Toon\Enums\Delimiter;
+use JayI\Toon\Enums\KeyFolding;
 
 /**
  * Configuration options for the TOON encoder.

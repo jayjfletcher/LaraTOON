@@ -1,7 +1,7 @@
 <?php
 
-use Jayi\Toon\Decoding\HeaderParser;
-use Jayi\Toon\Enums\Delimiter;
+use JayI\Toon\Decoding\HeaderParser;
+use JayI\Toon\Enums\Delimiter;
 
 it('parses a simple array header', function () {
     $result = HeaderParser::parse('tags[3]: a,b,c');

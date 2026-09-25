@@ -1,15 +1,15 @@
 <?php
 
-namespace Jayi\Toon;
+namespace JayI\Toon;
 
 use Illuminate\Container\Container;
-use Jayi\Toon\Decoding\DecoderOptions;
-use Jayi\Toon\Decoding\ToonDecoder;
-use Jayi\Toon\Encoding\EncoderOptions;
-use Jayi\Toon\Encoding\ToonEncoder;
-use Jayi\Toon\Enums\Delimiter;
-use Jayi\Toon\Enums\KeyFolding;
-use Jayi\Toon\Enums\PathExpansion;
+use JayI\Toon\Decoding\DecoderOptions;
+use JayI\Toon\Decoding\ToonDecoder;
+use JayI\Toon\Encoding\EncoderOptions;
+use JayI\Toon\Encoding\ToonEncoder;
+use JayI\Toon\Enums\Delimiter;
+use JayI\Toon\Enums\KeyFolding;
+use JayI\Toon\Enums\PathExpansion;
 
 /**
  * TOON (Token-Oriented Object Notation) encoder and decoder.

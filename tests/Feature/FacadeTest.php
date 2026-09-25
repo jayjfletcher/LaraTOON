@@ -1,6 +1,6 @@
 <?php
 
-use Jayi\Toon\Facades\Toon;
+use JayI\Toon\Facades\Toon;
 
 test('it encodes data via facade', function () {
     $result = Toon::encode(['id' => 1, 'name' => 'Ada']);

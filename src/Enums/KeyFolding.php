@@ -1,6 +1,6 @@
 <?php
 
-namespace Jayi\Toon\Enums;
+namespace JayI\Toon\Enums;
 
 /**
  * Controls key folding behavior during encoding.

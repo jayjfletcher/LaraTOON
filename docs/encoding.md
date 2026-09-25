@@ -9,9 +9,9 @@ Toon provides three encoding methods and a flexible options object for controlli
 Standard encoding with configurable options.
 
 ```php
-use Jayi\Toon\Toon;
-use Jayi\Toon\Encoding\EncoderOptions;
-use Jayi\Toon\Enums\Delimiter;
+use JayI\Toon\Toon;
+use JayI\Toon\Encoding\EncoderOptions;
+use JayI\Toon\Enums\Delimiter;
 
 $toon = Toon::encode($data);
 $toon = Toon::encode($data, new EncoderOptions(indentSize: 4));
@@ -42,7 +42,7 @@ $toon = Toon::smart($data); // picks the smallest output
 All options are passed via the `EncoderOptions` value object:
 
 ```php
-use Jayi\Toon\Encoding\EncoderOptions;
+use JayI\Toon\Encoding\EncoderOptions;
 
 $options = new EncoderOptions(
     indentSize: 2,

@@ -1,12 +1,12 @@
 <?php
 
-namespace Jayi\Toon\Encoding;
+namespace JayI\Toon\Encoding;
 
 use BackedEnum;
 use DateTimeInterface;
-use Jayi\Toon\Enums\Delimiter;
-use Jayi\Toon\Enums\KeyFolding;
-use Jayi\Toon\Exceptions\ToonEncodeException;
+use JayI\Toon\Enums\Delimiter;
+use JayI\Toon\Enums\KeyFolding;
+use JayI\Toon\Exceptions\ToonEncodeException;
 use JsonSerializable;
 use Stringable;
 use Traversable;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Jayi\Toon\Encoding;
+namespace JayI\Toon\Encoding;
 
-use Jayi\Toon\Enums\Delimiter;
+use JayI\Toon\Enums\Delimiter;
 
 /**
  * Encodes individual primitive values to TOON format.

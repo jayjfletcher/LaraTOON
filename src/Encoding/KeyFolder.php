@@ -1,6 +1,6 @@
 <?php
 
-namespace Jayi\Toon\Encoding;
+namespace JayI\Toon\Encoding;
 
 /**
  * Collapses chains of single-key nested objects into dotted-path keys.

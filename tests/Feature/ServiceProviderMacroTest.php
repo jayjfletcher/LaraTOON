@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Http\JsonResponse;
-use Jayi\Toon\Encoding\EncoderOptions;
-use Jayi\Toon\Enums\KeyFolding;
-use Jayi\Toon\ToonServiceProvider;
+use JayI\Toon\Encoding\EncoderOptions;
+use JayI\Toon\Enums\KeyFolding;
+use JayI\Toon\ToonServiceProvider;
 
 test('it registers the JsonResponse toToon macro', function () {
     expect(JsonResponse::hasMacro('toToon'))->toBeTrue();

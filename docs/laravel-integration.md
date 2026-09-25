@@ -57,7 +57,7 @@ $response->toToon();
 Add TOON encoding to any Eloquent model:
 
 ```php
-use Jayi\Toon\Traits\HasToon;
+use JayI\Toon\Traits\HasToon;
 
 class User extends Model
 {

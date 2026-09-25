@@ -1,8 +1,8 @@
 <?php
 
-namespace Jayi\Toon\Overrides\Laravel\Pao;
+namespace JayI\Toon\Overrides\Laravel\Pao;
 
-use Jayi\Toon\Toon;
+use JayI\Toon\Toon;
 use php_user_filter;
 
 /**

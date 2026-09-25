@@ -17,26 +17,26 @@
     },
     "autoload": {
         "psr-4": {
-            "Jayi\\Toon\\": "src/"
+            "JayI\\Toon\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Jayi\\Toon\\Tests\\": "tests/"
+            "JayI\\Toon\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Jayi\\Toon\\ToonServiceProvider"
+                "JayI\\Toon\\ToonServiceProvider"
             ],
             "aliases": {
-                "Toon": "Jayi\\Toon\\Facades\\Toon"
+                "Toon": "JayI\\Toon\\Facades\\Toon"
             }
         },
         "pest": {
             "plugins": [
-                "Jayi\\Toon\\Overrides\\Laravel\\Pao\\Plugin"
+                "JayI\\Toon\\Overrides\\Laravel\\Pao\\Plugin"
             ]
         }
     },

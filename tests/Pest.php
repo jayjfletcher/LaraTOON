@@ -1,5 +1,5 @@
 <?php
 
-use Jayi\Toon\Tests\TestCase;
+use JayI\Toon\Tests\TestCase;
 
 uses(TestCase::class)->in('Feature');

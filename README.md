@@ -28,7 +28,7 @@ The service provider and facade are auto-discovered.
 ## Quick Start
 
 ```php
-use Jayi\Toon\Toon;
+use JayI\Toon\Toon;
 
 // Encode
 $toon = Toon::encode([

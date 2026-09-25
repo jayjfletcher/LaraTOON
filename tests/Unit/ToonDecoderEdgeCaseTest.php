@@ -1,9 +1,9 @@
 <?php
 
-use Jayi\Toon\Decoding\DecoderOptions;
-use Jayi\Toon\Decoding\ToonDecoder;
-use Jayi\Toon\Enums\PathExpansion;
-use Jayi\Toon\Exceptions\ToonStrictModeException;
+use JayI\Toon\Decoding\DecoderOptions;
+use JayI\Toon\Decoding\ToonDecoder;
+use JayI\Toon\Enums\PathExpansion;
+use JayI\Toon\Exceptions\ToonStrictModeException;
 
 it('decodes blank lines between object keys', function () {
     $decoder = new ToonDecoder(new DecoderOptions(strict: false));

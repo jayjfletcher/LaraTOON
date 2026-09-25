@@ -1,6 +1,6 @@
 <?php
 
-namespace Jayi\Toon\Exceptions;
+namespace JayI\Toon\Exceptions;
 
 /**
  * Thrown when strict mode validation fails during decoding.

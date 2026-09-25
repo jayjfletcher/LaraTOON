@@ -1,6 +1,6 @@
 <?php
 
-use Jayi\Toon\Encoding\NumberEncoder;
+use JayI\Toon\Encoding\NumberEncoder;
 
 it('encodes very large floats without scientific notation', function () {
     $result = NumberEncoder::encode(1e15);

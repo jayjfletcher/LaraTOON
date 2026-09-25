@@ -1,12 +1,12 @@
 <?php
 
-namespace Jayi\Toon;
+namespace JayI\Toon;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
-use Jayi\Toon\Encoding\EncoderOptions;
+use JayI\Toon\Encoding\EncoderOptions;
 use Laravel\Mcp\Response as McpResponse;
 
 /**

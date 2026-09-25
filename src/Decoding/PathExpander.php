@@ -1,8 +1,8 @@
 <?php
 
-namespace Jayi\Toon\Decoding;
+namespace JayI\Toon\Decoding;
 
-use Jayi\Toon\Exceptions\ToonStrictModeException;
+use JayI\Toon\Exceptions\ToonStrictModeException;
 
 /**
  * Expands dotted keys into nested object structures with deep merge.

@@ -1,6 +1,6 @@
 <?php
 
-use Jayi\Toon\Toon;
+use JayI\Toon\Toon;
 
 it('smart returns default for list array', function () {
     $data = [1, 2, 3];

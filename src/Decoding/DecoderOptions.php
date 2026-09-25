@@ -1,8 +1,8 @@
 <?php
 
-namespace Jayi\Toon\Decoding;
+namespace JayI\Toon\Decoding;
 
-use Jayi\Toon\Enums\PathExpansion;
+use JayI\Toon\Enums\PathExpansion;
 
 /**
  * Configuration options for the TOON decoder.

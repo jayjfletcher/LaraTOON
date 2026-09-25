@@ -1,6 +1,6 @@
 <?php
 
-namespace Jayi\Toon\Encoding;
+namespace JayI\Toon\Encoding;
 
 /**
  * Encodes numbers to TOON canonical decimal form.

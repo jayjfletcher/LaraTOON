@@ -1,8 +1,8 @@
 <?php
 
-namespace Jayi\Toon\Overrides\Laravel\Ai;
+namespace JayI\Toon\Overrides\Laravel\Ai;
 
-use Jayi\Toon\Toon;
+use JayI\Toon\Toon;
 use Stringable;
 
 /**

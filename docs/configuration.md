@@ -54,9 +54,9 @@ Set via the `TOON_PAO_OUTPUT` environment variable or directly in the config fil
 Config values provide defaults. You can always override per-call by passing an options object:
 
 ```php
-use Jayi\Toon\Toon;
-use Jayi\Toon\Encoding\EncoderOptions;
-use Jayi\Toon\Enums\Delimiter;
+use JayI\Toon\Toon;
+use JayI\Toon\Encoding\EncoderOptions;
+use JayI\Toon\Enums\Delimiter;
 
 // Uses config defaults
 Toon::encode($data);

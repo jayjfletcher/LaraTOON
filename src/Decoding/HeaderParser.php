@@ -1,9 +1,9 @@
 <?php
 
-namespace Jayi\Toon\Decoding;
+namespace JayI\Toon\Decoding;
 
-use Jayi\Toon\Enums\Delimiter;
-use Jayi\Toon\Exceptions\ToonStrictModeException;
+use JayI\Toon\Enums\Delimiter;
+use JayI\Toon\Exceptions\ToonStrictModeException;
 
 /**
  * Parses TOON array header lines like `key[N]{field1,field2}:`.

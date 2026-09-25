@@ -1,9 +1,9 @@
 <?php
 
-use Jayi\Toon\Encoding\EncoderOptions;
-use Jayi\Toon\Encoding\ToonEncoder;
-use Jayi\Toon\Enums\KeyFolding;
-use Jayi\Toon\Toon;
+use JayI\Toon\Encoding\EncoderOptions;
+use JayI\Toon\Encoding\ToonEncoder;
+use JayI\Toon\Enums\KeyFolding;
+use JayI\Toon\Toon;
 
 it('encodes a simple object', function () {
     $encoder = new ToonEncoder;

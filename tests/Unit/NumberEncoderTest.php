@@ -1,6 +1,6 @@
 <?php
 
-use Jayi\Toon\Encoding\NumberEncoder;
+use JayI\Toon\Encoding\NumberEncoder;
 
 it('encodes integers', function () {
     expect(NumberEncoder::encode(0))->toBe('0');

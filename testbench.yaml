@@ -1,2 +1,2 @@
 providers:
-  - Jayi\Toon\ToonServiceProvider
+  - JayI\Toon\ToonServiceProvider

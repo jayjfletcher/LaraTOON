@@ -1,6 +1,6 @@
 <?php
 
-namespace Jayi\Toon\Overrides\Laravel\Ai;
+namespace JayI\Toon\Overrides\Laravel\Ai;
 
 use Closure;
 use Laravel\Ai\Prompts\AgentPrompt;

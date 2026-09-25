@@ -7,7 +7,7 @@ Toon provides middleware and traits for integrating with Laravel AI agents and M
 `ToonMiddleware` adds TOON format instructions to your agent's system prompt so the LLM knows how to interpret TOON-encoded tool results:
 
 ```php
-use Jayi\Toon\Overrides\Laravel\Ai\ToonMiddleware;
+use JayI\Toon\Overrides\Laravel\Ai\ToonMiddleware;
 use Laravel\Ai\Contracts\HasMiddleware;
 
 class MyAgent implements HasMiddleware
@@ -26,7 +26,7 @@ When this middleware is active, the agent receives a concise explanation of TOON
 `EncodesToonToolResults` automatically TOON-encodes structured data returned from tool classes:
 
 ```php
-use Jayi\Toon\Overrides\Laravel\Mcp\EncodesToonToolResults;
+use JayI\Toon\Overrides\Laravel\Mcp\EncodesToonToolResults;
 use Laravel\Ai\Contracts\Tool;
 use Laravel\Ai\Tools\Request;
 
@@ -54,7 +54,7 @@ The trait provides a `handle()` method that calls your `run()` method and encode
 `ToonToolResponse` is a `Stringable` wrapper that lazily encodes data to TOON when cast to string:
 
 ```php
-use Jayi\Toon\Responses\ToonToolResponse;
+use JayI\Toon\Responses\ToonToolResponse;
 
 return new ToonToolResponse($data);
 ```

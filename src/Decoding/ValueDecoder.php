@@ -1,8 +1,8 @@
 <?php
 
-namespace Jayi\Toon\Decoding;
+namespace JayI\Toon\Decoding;
 
-use Jayi\Toon\Exceptions\ToonDecodeException;
+use JayI\Toon\Exceptions\ToonDecodeException;
 
 /**
  * Decodes individual TOON value tokens to PHP types.

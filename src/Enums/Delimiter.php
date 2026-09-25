@@ -1,6 +1,6 @@
 <?php
 
-namespace Jayi\Toon\Enums;
+namespace JayI\Toon\Enums;
 
 /**
  * Delimiter used to separate values in TOON arrays and tabular rows.

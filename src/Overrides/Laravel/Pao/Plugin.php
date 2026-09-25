@@ -1,6 +1,6 @@
 <?php
 
-namespace Jayi\Toon\Overrides\Laravel\Pao;
+namespace JayI\Toon\Overrides\Laravel\Pao;
 
 use Illuminate\Container\Container;
 use Laravel\Pao\Execution;
