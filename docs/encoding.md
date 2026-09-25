@@ -34,7 +34,7 @@ $toon = Toon::compact([
 Automatically chooses compact or default encoding based on the data structure. Uses compact when it detects foldable nested chains or deep nesting (depth >= 4); uses default otherwise.
 
 ```php
-$toon = Toon::smart($data); // picks the smallest output
+$toon = Toon::smart($data); // compact for foldable/deep data, default otherwise
 ```
 
 ## Encoder Options
@@ -73,8 +73,10 @@ The encoder automatically normalizes common PHP types before encoding:
 - Backed enums are converted to their value
 - Unit enums are converted to their name
 - Objects implementing `JsonSerializable` are serialized via `jsonSerialize()`
-- Objects implementing `Arrayable` (Laravel) are converted via `toArray()`
 - `Stringable` objects are cast to string
+- `Traversable` objects are iterated into arrays
+- Other objects are cast to arrays of their properties (an empty `stdClass` encodes as an empty object)
+- Non-finite floats (`NAN`, `INF`) become `null`, `-0.0` becomes `0`, and integral floats become integers
 
 ## Token Savings
 

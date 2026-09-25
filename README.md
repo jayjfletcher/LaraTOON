@@ -84,5 +84,7 @@ Compact mode makes the biggest difference on deeply nested data due to key foldi
 ## Testing
 
 ```bash
-php artisan test packages/Toon/tests
+composer test       # Pest
+composer phpstan    # Larastan
+composer pint:test  # Pint (laravel preset)
 ```

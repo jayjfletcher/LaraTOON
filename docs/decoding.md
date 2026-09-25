@@ -34,7 +34,7 @@ $data = Toon::decode($toon, new DecoderOptions(
 
 When `indentSize` is `null` (the default), the decoder examines the first indented line in the input to determine the indent size. This works reliably for any consistent indentation (1, 2, 4 spaces, etc.).
 
-When `expandPaths` is set to `Auto`, the decoder checks whether any top-level keys contain dots. If they do, it expands them into nested structures:
+When `expandPaths` is set to `Auto`, the decoder checks whether any key (at any depth, including inside list items) is a dotted path starting with an identifier segment. If one is found, dotted keys are expanded into nested structures:
 
 ```php
 $toon = "a.b.c: 1";

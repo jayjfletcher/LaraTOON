@@ -5,7 +5,10 @@
     "license": "proprietary",
     "require": {
         "php": "^8.4",
-        "illuminate/support": "^13.0"
+        "illuminate/support": "^13.0",
+        "illuminate/container": "^13.0",
+        "illuminate/database": "^13.0",
+        "illuminate/http": "^13.0"
     },
     "require-dev": {
         "orchestra/testbench": "^11.0",

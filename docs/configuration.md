@@ -20,7 +20,7 @@ return [
     'key_folding' => 'off',
     'flatten_depth' => INF,
     'strict' => true,
-    'expand_paths' => 'off',
+    'expand_paths' => 'auto',
     'pao_output' => env('TOON_PAO_OUTPUT', false),
 ];
 ```
@@ -39,7 +39,7 @@ return [
 | Key | Default | Values | Description |
 |-----|---------|--------|-------------|
 | `strict` | `true` | `true`, `false` | Enforce strict validation during decoding |
-| `expand_paths` | `'off'` | `'off'`, `'safe'`, `'auto'` | Dotted key expansion strategy |
+| `expand_paths` | `'auto'` | `'off'`, `'safe'`, `'auto'` | Dotted key expansion strategy |
 
 ### PAO Integration
 

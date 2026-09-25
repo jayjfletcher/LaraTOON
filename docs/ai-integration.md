@@ -26,7 +26,7 @@ When this middleware is active, the agent receives a concise explanation of TOON
 `EncodesToonToolResults` automatically TOON-encodes structured data returned from tool classes:
 
 ```php
-use JayI\Toon\Overrides\Laravel\Mcp\EncodesToonToolResults;
+use JayI\Toon\Overrides\Laravel\Ai\EncodesToonToolResults;
 use Laravel\Ai\Contracts\Tool;
 use Laravel\Ai\Tools\Request;
 
@@ -46,15 +46,15 @@ class SearchUsers implements Tool
 
 The trait provides a `handle()` method that calls your `run()` method and encodes the result:
 
-- Arrays and objects are encoded via `Toon::smart()`
-- Strings are returned as-is (assumed to be pre-formatted)
+- Arrays and objects are wrapped in a `ToonToolResponse` (encoded via `Toon::smart()`)
+- Any other value is cast to a string and returned as-is
 
 ## ToonToolResponse
 
-`ToonToolResponse` is a `Stringable` wrapper that lazily encodes data to TOON when cast to string:
+`ToonToolResponse` is a `Stringable` wrapper that encodes data with `Toon::smart()` when constructed and returns the TOON string when cast to string:
 
 ```php
-use JayI\Toon\Responses\ToonToolResponse;
+use JayI\Toon\Overrides\Laravel\Ai\ToonToolResponse;
 
 return new ToonToolResponse($data);
 ```
@@ -77,7 +77,7 @@ This is a drop-in replacement for `Response::json()` with automatic token saving
 
 ## PAO Test Output
 
-When [PAO](https://github.com/nunomaduro/pao) is installed, test output can be encoded as TOON instead of JSON. This is useful when AI agents are consuming test results.
+When [PAO](https://github.com/laravel/pao) (`laravel/pao`) is installed, test output can be encoded as TOON instead of JSON. This is useful when AI agents are consuming test results.
 
 Enable via environment variable:
 
