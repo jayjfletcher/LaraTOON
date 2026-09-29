@@ -3,13 +3,16 @@
 namespace JayI\Toon\Overrides\Laravel\Ai;
 
 use Closure;
-use Laravel\Ai\Prompts\AgentPrompt;
+use Laravel\Ai\Gateway\StepResult;
+use Laravel\Ai\PendingStep;
 
 /**
- * Laravel AI agent middleware that appends TOON format instructions to the prompt.
+ * Laravel AI agent middleware that appends TOON format instructions to each
+ * generation step's system instructions.
  *
  * Add to your agent's `middleware()` array so the LLM knows how to interpret
- * TOON-encoded tool results.
+ * TOON-encoded tool results. Laravel AI rebuilds every step from the agent's
+ * own instructions, so the note is appended exactly once per step.
  */
 class ToonMiddleware
 {
@@ -21,8 +24,13 @@ class ToonMiddleware
         .'Dotted keys represent nested paths: `a.b.c: 1` means `{"a":{"b":{"c":1}}}`. '
         .'Parse TOON tool results the same way you would parse JSON tool results.';
 
-    public function handle(AgentPrompt $prompt, Closure $next): mixed
+    /**
+     * @param  Closure(PendingStep): StepResult  $next
+     */
+    public function handle(PendingStep $step, Closure $next): StepResult
     {
-        return $next($prompt->append(self::INSTRUCTION));
+        return $next($step->withInstructions(
+            trim(($step->instructions ?? '')."\n\n".self::INSTRUCTION),
+        ));
     }
 }
