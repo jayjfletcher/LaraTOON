@@ -1,7 +1,7 @@
 <?php
 
-use JayI\Toon\Decoding\PathExpander;
-use JayI\Toon\Exceptions\ToonStrictModeException;
+use JayI\Toon\Domains\Decoding\Exceptions\ToonStrictModeException;
+use JayI\Toon\Domains\Decoding\Support\PathExpander;
 
 it('expands dotted keys into nested structures', function () {
     $expander = new PathExpander;

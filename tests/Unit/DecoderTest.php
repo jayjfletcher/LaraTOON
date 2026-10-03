@@ -1,10 +1,10 @@
 <?php
 
-use JayI\Toon\Decoding\DecoderOptions;
-use JayI\Toon\Decoding\ToonDecoder;
-use JayI\Toon\Enums\PathExpansion;
-use JayI\Toon\Exceptions\ToonDecodeException;
-use JayI\Toon\Exceptions\ToonStrictModeException;
+use JayI\Toon\Domains\Decoding\Data\DecoderOptions;
+use JayI\Toon\Domains\Decoding\Enums\PathExpansion;
+use JayI\Toon\Domains\Decoding\Exceptions\ToonDecodeException;
+use JayI\Toon\Domains\Decoding\Exceptions\ToonStrictModeException;
+use JayI\Toon\Domains\Decoding\Support\ToonDecoder;
 
 it('decodes a simple object', function () {
     $decoder = new ToonDecoder;

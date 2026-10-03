@@ -10,8 +10,8 @@ Standard encoding with configurable options.
 
 ```php
 use JayI\Toon\Toon;
-use JayI\Toon\Encoding\EncoderOptions;
-use JayI\Toon\Enums\Delimiter;
+use JayI\Toon\Domains\Encoding\Data\EncoderOptions;
+use JayI\Toon\Domains\Encoding\Enums\Delimiter;
 
 $toon = Toon::encode($data);
 $toon = Toon::encode($data, new EncoderOptions(indentSize: 4));
@@ -42,7 +42,7 @@ $toon = Toon::smart($data); // compact for foldable/deep data, default otherwise
 All options are passed via the `EncoderOptions` value object:
 
 ```php
-use JayI\Toon\Encoding\EncoderOptions;
+use JayI\Toon\Domains\Encoding\Data\EncoderOptions;
 
 $options = new EncoderOptions(
     indentSize: 2,

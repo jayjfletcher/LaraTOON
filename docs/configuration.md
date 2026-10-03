@@ -55,8 +55,8 @@ Config values provide defaults. You can always override per-call by passing an o
 
 ```php
 use JayI\Toon\Toon;
-use JayI\Toon\Encoding\EncoderOptions;
-use JayI\Toon\Enums\Delimiter;
+use JayI\Toon\Domains\Encoding\Data\EncoderOptions;
+use JayI\Toon\Domains\Encoding\Enums\Delimiter;
 
 // Uses config defaults
 Toon::encode($data);

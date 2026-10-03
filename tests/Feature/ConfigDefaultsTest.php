@@ -1,8 +1,8 @@
 <?php
 
-use JayI\Toon\Decoding\DecoderOptions;
-use JayI\Toon\Encoding\EncoderOptions;
-use JayI\Toon\Overrides\Laravel\Pao\Plugin;
+use JayI\Toon\Domains\Decoding\Data\DecoderOptions;
+use JayI\Toon\Domains\Encoding\Data\EncoderOptions;
+use JayI\Toon\Domains\Integration\Pao\Plugin;
 use JayI\Toon\Toon;
 
 it('uses the published config defaults for encoding', function () {

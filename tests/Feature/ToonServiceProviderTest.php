@@ -2,10 +2,10 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use JayI\Toon\Encoding\EncoderOptions;
-use JayI\Toon\Enums\KeyFolding;
+use JayI\Toon\Domains\Encoding\Data\EncoderOptions;
+use JayI\Toon\Domains\Encoding\Enums\KeyFolding;
+use JayI\Toon\Domains\Integration\Concerns\HasToon;
 use JayI\Toon\Toon;
-use JayI\Toon\Traits\HasToon;
 
 beforeEach(function () {
     if (! Collection::hasMacro('toToon')) {

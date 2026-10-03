@@ -81,6 +81,18 @@ $stats = Toon::savings($data);
 
 Compact mode makes the biggest difference on deeply nested data due to key folding.
 
+## Package Layout
+
+Code is grouped into domain modules under `src/Domains/`, namespace `JayI\Toon\Domains\{Domain}`:
+
+| Domain | Contents |
+|--------|----------|
+| `Encoding` | `Data\EncoderOptions`, `Enums\Delimiter`, `Enums\KeyFolding`, `Exceptions\ToonEncodeException`, `Support\ToonEncoder` and its helpers |
+| `Decoding` | `Data\DecoderOptions`, `Enums\PathExpansion`, `Exceptions\ToonDecodeException`, `Exceptions\ToonStrictModeException`, `Support\ToonDecoder` and its helpers |
+| `Integration` | Laravel macros (`IntegrationServiceProvider`), `Concerns\HasToon`, laravel/ai (`Ai\*`) and laravel/pao (`Pao\*`) integrations |
+
+`JayI\Toon\Toon`, `JayI\Toon\Facades\Toon`, `JayI\Toon\ToonServiceProvider` and the base `JayI\Toon\Exceptions\ToonException` stay at the package root. See [CHANGELOG](CHANGELOG.md) for the old to new class map.
+
 ## Testing
 
 ```bash

@@ -1,7 +1,7 @@
 <?php
 
-use JayI\Toon\Encoding\ValueEncoder;
-use JayI\Toon\Enums\Delimiter;
+use JayI\Toon\Domains\Encoding\Enums\Delimiter;
+use JayI\Toon\Domains\Encoding\Support\ValueEncoder;
 
 it('encodes null', function () {
     expect(ValueEncoder::encode(null, Delimiter::Comma, Delimiter::Comma))->toBe('null');

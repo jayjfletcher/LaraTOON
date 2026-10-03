@@ -3,13 +3,13 @@
 namespace JayI\Toon;
 
 use Illuminate\Container\Container;
-use JayI\Toon\Decoding\DecoderOptions;
-use JayI\Toon\Decoding\ToonDecoder;
-use JayI\Toon\Encoding\EncoderOptions;
-use JayI\Toon\Encoding\ToonEncoder;
-use JayI\Toon\Enums\Delimiter;
-use JayI\Toon\Enums\KeyFolding;
-use JayI\Toon\Enums\PathExpansion;
+use JayI\Toon\Domains\Decoding\Data\DecoderOptions;
+use JayI\Toon\Domains\Decoding\Enums\PathExpansion;
+use JayI\Toon\Domains\Decoding\Support\ToonDecoder;
+use JayI\Toon\Domains\Encoding\Data\EncoderOptions;
+use JayI\Toon\Domains\Encoding\Enums\Delimiter;
+use JayI\Toon\Domains\Encoding\Enums\KeyFolding;
+use JayI\Toon\Domains\Encoding\Support\ToonEncoder;
 
 /**
  * TOON (Token-Oriented Object Notation) encoder and decoder.

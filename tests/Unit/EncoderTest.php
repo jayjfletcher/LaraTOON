@@ -1,8 +1,8 @@
 <?php
 
-use JayI\Toon\Encoding\EncoderOptions;
-use JayI\Toon\Encoding\ToonEncoder;
-use JayI\Toon\Enums\KeyFolding;
+use JayI\Toon\Domains\Encoding\Data\EncoderOptions;
+use JayI\Toon\Domains\Encoding\Enums\KeyFolding;
+use JayI\Toon\Domains\Encoding\Support\ToonEncoder;
 use JayI\Toon\Toon;
 
 it('encodes a simple object', function () {

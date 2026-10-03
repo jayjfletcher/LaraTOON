@@ -1,6 +1,6 @@
 <?php
 
-use JayI\Toon\Overrides\Laravel\Ai\ToonMiddleware;
+use JayI\Toon\Domains\Integration\Ai\ToonMiddleware;
 use Laravel\Ai\Gateway\StepResponse;
 use Laravel\Ai\Gateway\StepResult;
 use Laravel\Ai\PendingStep;

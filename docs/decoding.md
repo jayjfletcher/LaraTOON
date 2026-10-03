@@ -8,8 +8,8 @@ Toon decodes TOON-formatted strings back into PHP arrays with automatic detectio
 
 ```php
 use JayI\Toon\Toon;
-use JayI\Toon\Decoding\DecoderOptions;
-use JayI\Toon\Enums\PathExpansion;
+use JayI\Toon\Domains\Decoding\Data\DecoderOptions;
+use JayI\Toon\Domains\Decoding\Enums\PathExpansion;
 
 // Auto-detect everything (default)
 $data = Toon::decode($toon);

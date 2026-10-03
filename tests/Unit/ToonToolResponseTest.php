@@ -1,6 +1,6 @@
 <?php
 
-use JayI\Toon\Overrides\Laravel\Ai\ToonToolResponse;
+use JayI\Toon\Domains\Integration\Ai\ToonToolResponse;
 
 it('implements Stringable', function () {
     $response = new ToonToolResponse(['id' => 1, 'name' => 'Ada']);

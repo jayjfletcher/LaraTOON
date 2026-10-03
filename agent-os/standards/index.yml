@@ -3,6 +3,8 @@
 backend:
   config-defaults:
     description: Laravel config feeds default options only; caller-passed options always win
+  domain-layout:
+    description: Code grouped under src/Domains/{Encoding,Decoding,Integration}; third-party integrations isolated in Integration/<Vendor>
   exception-hierarchy:
     description: Single ToonException base; StrictMode under Decode; decode errors carry line number
   framework-optional:
@@ -21,8 +23,6 @@ backend:
     description: String-backed option enums; backing value = config token; behavior methods on the enum
   overrides-delegate:
     description: Override classes adapt one host hook then delegate to Toon::encode/smart
-  overrides-layout:
-    description: Third-party integrations isolated under src/Overrides/<Ecosystem>/<Vendor>
   spec-invariants:
     description: Spec-cited quoting/number/escape rules and named marker constants
   stateless-helpers:

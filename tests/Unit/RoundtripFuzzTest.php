@@ -1,8 +1,8 @@
 <?php
 
-use JayI\Toon\Decoding\DecoderOptions;
-use JayI\Toon\Decoding\ToonDecoder;
-use JayI\Toon\Encoding\ToonEncoder;
+use JayI\Toon\Domains\Decoding\Data\DecoderOptions;
+use JayI\Toon\Domains\Decoding\Support\ToonDecoder;
+use JayI\Toon\Domains\Encoding\Support\ToonEncoder;
 
 /**
  * Deterministic property-style roundtrip suite: every structure must survive

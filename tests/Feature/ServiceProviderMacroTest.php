@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Http\JsonResponse;
-use JayI\Toon\Encoding\EncoderOptions;
-use JayI\Toon\Enums\KeyFolding;
+use JayI\Toon\Domains\DomainServiceProvider;
+use JayI\Toon\Domains\Encoding\Data\EncoderOptions;
+use JayI\Toon\Domains\Encoding\Enums\KeyFolding;
+use JayI\Toon\Domains\Integration\IntegrationServiceProvider;
 use JayI\Toon\ToonServiceProvider;
 
 test('it registers the JsonResponse toToon macro', function () {
@@ -61,4 +63,9 @@ test('it publishes toon config', function () {
 test('it merges default config', function () {
     expect(config('toon.indent_size'))->toBe(2)
         ->and(config('toon.strict'))->toBeTrue();
+});
+
+test('it registers the domain providers', function () {
+    expect(app()->getProvider(DomainServiceProvider::class))->not->toBeNull()
+        ->and(app()->getProvider(IntegrationServiceProvider::class))->not->toBeNull();
 });

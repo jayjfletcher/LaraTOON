@@ -39,7 +39,7 @@
         },
         "pest": {
             "plugins": [
-                "JayI\\Toon\\Overrides\\Laravel\\Pao\\Plugin"
+                "JayI\\Toon\\Domains\\Integration\\Pao\\Plugin"
             ]
         }
     },

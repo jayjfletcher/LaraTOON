@@ -7,7 +7,7 @@ toToon(?EncoderOptions $options = null): string
 ```
 
 Registered on:
-- `Collection`, `Builder`, `JsonResponse` — macros in `ToonServiceProvider::boot()`
+- `Collection`, `Builder`, `JsonResponse` — macros in `IntegrationServiceProvider::boot()` (Integration domain)
 - Any class with `toArray()` — `HasToon` trait
 
 Each impl: adapt source → array/data, then delegate. NO encoding logic in the macro/trait.

@@ -1,7 +1,7 @@
 <?php
 
-use JayI\Toon\Overrides\Laravel\Ai\EncodesToonToolResults;
-use JayI\Toon\Overrides\Laravel\Ai\ToonToolResponse;
+use JayI\Toon\Domains\Integration\Ai\EncodesToonToolResults;
+use JayI\Toon\Domains\Integration\Ai\ToonToolResponse;
 use Laravel\Ai\Tools\Request;
 
 it('wraps array results in a ToonToolResponse', function () {

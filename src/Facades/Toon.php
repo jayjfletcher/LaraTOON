@@ -3,8 +3,8 @@
 namespace JayI\Toon\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use JayI\Toon\Decoding\DecoderOptions;
-use JayI\Toon\Encoding\EncoderOptions;
+use JayI\Toon\Domains\Decoding\Data\DecoderOptions;
+use JayI\Toon\Domains\Encoding\Data\EncoderOptions;
 
 /**
  * @method static string encode(mixed $data, ?EncoderOptions $options = null) Encode data to TOON format.
